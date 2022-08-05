@@ -1,0 +1,69 @@
+# Create NVMe namespace
+- name: Create NVMe namespace
+  netapp.ontap.na_ontap_nvme_namespace:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    path: /vol/{{item.residing_vol}}/{{item.name}}
+    size: "{{item.size}}"
+    size_unit: gb
+    ostype: "{{svm_specs.os_type}}"
+    https: true
+    validate_certs: false
+  with_items:
+    - "{{ svm_specs.nvme_specs.namespaces }}"
+  when: "('nvme' in svm_specs.allowed_protocols)"
+  tags:
+    - ontap_create_nvme_namespace
+
+# Create NVMe subsystem and add the host NQNs to the NVMe subsystem
+- name: Create NVMe subsystem and add the host NQN to the subsystem
+  netapp.ontap.na_ontap_nvme_subsystem:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    subsystem: "{{item.0.name}}"
+    hosts: "{{item.1}}"
+    ostype: "{{svm_specs.os_type}}"
+    https: true
+    validate_certs: false
+  with_subelements:
+    - "{{ svm_specs.nvme_specs.subsystem }}"
+    - nqn
+  when: "('nvme' in svm_specs.allowed_protocols)"
+  tags:
+    - ontap_create_nvme_subsystem
+
+# Getting the list of Namespace paths to be associated with the subsystem
+- name: Get the list of Namespace paths to be associated with the subsystem
+  set_fact:
+    ns_paths_list: "{{ns_paths_list | default([])}} + ['/vol/{{item.residing_vol}}/{{item.name}}']"
+  with_items:
+    - "{{ svm_specs.nvme_specs.namespaces }}"
+  when: 
+    - "('nvme' in svm_specs.allowed_protocols)"
+    - item is defined and item != None
+  tags:
+    - ontap_map_namespace_to_subsystem
+    
+# Map the namespaces to the NVMe subsystem
+- name: Map the namespaces to the subsystem
+  netapp.ontap.na_ontap_nvme_subsystem:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    subsystem: "{{item.name}}"
+    paths: "{{ns_paths_list}}"
+    https: true
+    validate_certs: false
+  with_items:
+    - "{{ svm_specs.nvme_specs.subsystem }}"
+  when: "('nvme' in svm_specs.allowed_protocols)"
+  tags:
+    - ontap_map_namespace_to_subsystem
