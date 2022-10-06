@@ -1,20 +1,21 @@
 ---
-# Create the Export policy rule
+# Create a new rule for the infrastructure NFS subnet in the default export policy
 - name: Create the export policy rules
-  netapp.ontap.na_ontap_export_policy_rule: 
-    state: present 
-    vserver: "{{item.svm_name}}" 
-    policy_name: default 
-    client_match: "{{item.client_match}}" 
-    protocol: "{{item.data_protocol}}" 
-    ro_rule: sys 
-    rw_rule: sys 
-    super_user_security: sys 
-    allow_suid: False 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
+  netapp.ontap.na_ontap_export_policy_rule:
+    state: present
+    vserver: "{{item.svm_name}}"
+    policy_name: default
+    client_match: "{{item.client_match}}"
+    protocol: "{{item.data_protocol}}"
+    ro_rule: sys
+    rw_rule: sys
+    rule_index: 1
+    super_user_security: sys
+    allow_suid: True
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
     password: "{{password}}"
-    https: true 
+    https: true
     validate_certs: false
   with_items:
     - "{{svm_specs}}"
@@ -23,21 +24,21 @@
 
 # Create FlexVols for datastores
 - name: Create FlexVols for datastores
-  netapp.ontap.na_ontap_volume: 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    policy: default 
-    name: "{{item.name}}" 
-    aggregate_name: "{{item.residing_aggr}}" 
-    size: "{{item.size}}" 
-    is_online: True 
-    space_guarantee: none 
-    percent_snapshot_space: 0 
-    junction_path: /{{item.name}} 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
+  netapp.ontap.na_ontap_volume:
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    policy: default
+    name: "{{item.name}}"
+    aggregate_name: "{{item.residing_aggr}}"
+    size: "{{item.size}}"
+    is_online: True
+    space_guarantee: none
+    percent_snapshot_space: 0
+    junction_path: /{{item.name}}
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
     password: "{{password}}"
-    https: true 
+    https: true
     validate_certs: false
   with_items:
     - "{{svm_specs.data_volumes}}"
@@ -46,22 +47,22 @@
 
 # Create swap volumes
 - name: Create swap volumes
-  netapp.ontap.na_ontap_volume: 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    policy: default 
-    name: "{{item.name}}" 
-    aggregate_name: "{{item.residing_aggr}}" 
-    size: "{{item.size}}" 
-    is_online: True 
-    space_guarantee: none 
-    percent_snapshot_space: 0 
+  netapp.ontap.na_ontap_volume:
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    policy: default
+    name: "{{item.name}}"
+    aggregate_name: "{{item.residing_aggr}}"
+    size: "{{item.size}}"
+    is_online: True
+    space_guarantee: none
+    percent_snapshot_space: 0
     snapshot_policy: none
-    junction_path: /{{item.name}} 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
+    junction_path: /{{item.name}}
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
     password: "{{password}}"
-    https: true 
+    https: true
     validate_certs: false
   with_items:
     - "{{svm_specs.swap_volumes}}"
@@ -70,14 +71,14 @@
 
 # Disable the volume efficiency on swap volumes
 - name: Disable the volume efficiency on swap volumes
-  netapp.ontap.na_ontap_volume_efficiency: 
-    state: absent 
-    vserver: "{{svm_specs.svm_name}}" 
-    path: "/vol/{{item.name}}" 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
+  netapp.ontap.na_ontap_volume_efficiency:
+    state: absent
+    vserver: "{{svm_specs.svm_name}}"
+    path: "/vol/{{item.name}}"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
     password: "{{password}}"
-    https: true 
+    https: true
     validate_certs: false
   with_items:
     - "{{svm_specs.swap_volumes}}"
@@ -86,20 +87,20 @@
 
 # Create NVMe datastores
 - name: Create NVMe datastores
-  netapp.ontap.na_ontap_volume: 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    policy: default 
-    name: "{{item.name}}" 
-    aggregate_name: "{{item.residing_aggr}}" 
-    size: "{{item.size}}" 
-    is_online: True 
-    space_guarantee: none 
-    percent_snapshot_space: 0 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
+  netapp.ontap.na_ontap_volume:
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    policy: default
+    name: "{{item.name}}"
+    aggregate_name: "{{item.residing_aggr}}"
+    size: "{{item.size}}"
+    is_online: True
+    space_guarantee: none
+    percent_snapshot_space: 0
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
     password: "{{password}}"
-    https: true 
+    https: true
     validate_certs: false
   with_items:
     - "{{svm_specs.nvme_datastores}}"
@@ -109,26 +110,50 @@
 
 # Create a FlexVol for the boot LUNs of servers
 - name: Create a FlexVol for the boot LUNs of servers
-  netapp.ontap.na_ontap_volume: 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    policy: default 
-    name: "{{item.name}}" 
-    aggregate_name: "{{item.residing_aggr}}" 
-    size: "{{item.size}}" 
+  netapp.ontap.na_ontap_volume:
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    policy: default
+    name: "{{item.name}}"
+    aggregate_name: "{{item.residing_aggr}}"
+    size: "{{item.size}}"
     space_guarantee: none
-    percent_snapshot_space: 0 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
+    percent_snapshot_space: 0
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
     password: "{{password}}"
-    https: true 
+    https: true
     validate_certs: false
   with_items:
     - "{{svm_specs.boot_volumes}}"
   tags:
     - ontap_flexvol_boot_luns
 
-# Update set of load-sharing mirrors.
+# Create vCLS datastores to be used by the vSphere environment to host vSphere Cluster Services (vCLS) VMs
+- name: Create vCLS datastores
+  netapp.ontap.na_ontap_volume:
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    policy: default
+    name: "{{item.name}}"
+    aggregate_name: "{{item.residing_aggr}}"
+    size: "{{item.size}}"
+    is_online: True
+    space_guarantee: none
+    percent_snapshot_space: 0
+    snapshot_policy: none
+    junction_path: /{{item.name}}
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    https: true
+    validate_certs: false
+  with_items:
+    - "{{svm_specs.vcls_datastores}}"
+  tags:
+    - ontap_vcls_datastores
+
+# Update set of load-sharing mirrors
 - name: Update load-sharing mirrors
   netapp.ontap.na_ontap_command:
     command: ['snapmirror', 'update-ls-set', '-source-path', '{{item.svm_name}}', ':', '{{item.svm_root_vol}}']

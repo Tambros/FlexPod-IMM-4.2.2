@@ -18,18 +18,19 @@ global_settings:
   - system default switchport shutdown
 #
 global_NTP_servers:
-  - 192.168.156.254
-ntp_distribution_vlan: '113' # VLAN (IB-MGMT) where NTP distribution interfaces will be placed.
+  - 172.20.10.11
+  - 172.20.10.12
+ntp_distribution_vlan: "{{ ib_vlan_id }}" # VLAN (IB-MGMT) where NTP distribution interfaces will be placed.
 ntp_distribution_nm_cidr: "/24"
-ntp_distribution_gw: '10.1.156.254' # Default gateway for NTP distribution interfaces.
+ntp_distribution_gw: '10.102.1.254' # Default gateway for IB-MGMT NTP distribution interfaces.
 #
-mgmt_PC:
-  - interface: "port-channel154"
+uplink_PC:
+  - interface: "port-channel102"
     # id must be same as port-channel number
-    id: "154"
-    speed: "100000"
-    duplex: "full"
-    description: "MGMT-Uplink"
+    id: "102"
+    speed: "auto"
+    duplex: "auto"
+    description: "AA02-Uplink"
 #
 peerlink_PC:
   - interface: "port-channel10"
@@ -40,40 +41,40 @@ peerlink_PC:
     description: "vPC Peer Link"
 #
 FI_A_PC:
-  - interface: "port-channel121"
+  - interface: "port-channel197"
     # id must be same as port-channel number
-    id: "121"
-    speed: "auto"
-    duplex: "auto"
-    description: "AA16-6454-A"
+    id: "197"
+    speed: "100000"
+    duplex: "full"
+    description: "AA02-6536-A"
 #
 FI_B_PC:
-  - interface: "port-channel123"
+  - interface: "port-channel198"
     # id must be same as port-channel number
-    id: "123"
-    speed: "auto"
-    duplex: "auto"
-    description: "AA16-6454-B"
+    id: "198"
+    speed: "100000"
+    duplex: "full"
+    description: "AA02-6536-B"
 #
 storage_A_PC:
-  - interface: "port-channel117"
+  - interface: "port-channel199"
     # id must be same as port-channel number
-    id: "117"
-    speed: "auto"
-    duplex: "auto"
-    description: "AA16-A400-01"
+    id: "199"
+    speed: "100000"
+    duplex: "full"
+    description: "AA02-A800-01"
 #
 storage_B_PC:
-  - interface: "port-channel119"
+  - interface: "port-channel1100"
     # id must be same as port-channel number
-    id: "119"
-    speed: "auto"
-    duplex: "auto"
-    description: "AA16-A400-02"
+    id: "1100"
+    speed: "100000"
+    duplex: "full"
+    description: "AA02-A800-02"
 #
-all_port_channels: "{{ peerlink_PC + mgmt_PC + FI_A_PC + FI_B_PC + storage_A_PC + storage_B_PC }}"
+all_port_channels: "{{ peerlink_PC + uplink_PC + FI_A_PC + FI_B_PC + storage_A_PC + storage_B_PC }}"
 #
 # VPC Parameters
 #
-vpc_domain_id: "20"
+vpc_domain_id: "10"
 #

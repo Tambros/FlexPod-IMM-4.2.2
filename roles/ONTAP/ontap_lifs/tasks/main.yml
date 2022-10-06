@@ -1,30 +1,30 @@
 ---
 # Create LIFs for NFS access
 - name: Create LIF(s) for NFS access
-  netapp.ontap.na_ontap_interface: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    role: data 
-    protocols: nfs 
-    home_node: "{{item.0.node_name}}" 
+  netapp.ontap.na_ontap_interface:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    role: data
+    protocols: nfs
+    home_node: "{{item.0.node_name}}"
     home_port: "{{item.2}}-{{item.1.id}}"
-    address: "{{item.0.nfs_lifs.address}}" 
-    netmask: "{{item.0.nfs_lifs.netmask}}" 
-    interface_name: "{{item.0.nfs_lifs.name}}" 
-    admin_status: up 
-    failover_policy: broadcast-domain-wide 
-    firewall_policy: data 
-    is_auto_revert: true 
-    https: true 
+    address: "{{item.0.nfs_lifs.address}}"
+    netmask: "{{item.0.nfs_lifs.netmask}}"
+    interface_name: "{{item.0.nfs_lifs.name}}"
+    admin_status: up
+    failover_policy: broadcast-domain-wide
+    firewall_policy: data
+    is_auto_revert: true
+    https: true
     validate_certs: false
   with_nested:
     - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
     - "{{storage_vlan_list}}"
     - "{{ifgrp_name}}"
-  when: 
+  when:
     - "('nfs' in svm_specs.allowed_protocols)"
     - item.1.storage_protocol == "NFS"
   tags:
@@ -37,7 +37,7 @@
   with_subelements:
     - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
     - iscsi_lifs
-  when: 
+  when:
     - "('iscsi' in svm_specs.allowed_protocols)"
   tags:
     - ontap_iscsi_lifs
@@ -48,7 +48,7 @@
     iscsi_vlans_list: "{{ iscsi_vlans_list|default([]) + [ {'vlan_id': item.id, 'vlan_fabric': item.fabric} ] }}"
   with_items:
     - "{{storage_vlan_list}}"
-  when: 
+  when:
     - "('iscsi' in svm_specs.allowed_protocols)"
     - item.storage_protocol == "iSCSI"
   tags:
@@ -56,29 +56,29 @@
 
 # Create iSCSI LIFs on all nodes across the cluster
 - name: Create iSCSI LIFs on nodes
-  netapp.ontap.na_ontap_interface: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    role: data 
-    protocols: iscsi 
-    home_node: "{{item.0.home_node}}" 
-    home_port: "{{ifgrp_name}}-{{item.1.vlan_id}}" 
-    address: "{{item.0.address}}" 
-    netmask: "{{item.0.netmask}}" 
-    interface_name: "{{item.0.lif_name}}" 
-    admin_status: up 
-    failover_policy: disabled 
-    firewall_policy: data 
-    is_auto_revert: false 
-    https: true 
+  netapp.ontap.na_ontap_interface:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    role: data
+    protocols: iscsi
+    home_node: "{{item.0.home_node}}"
+    home_port: "{{ifgrp_name}}-{{item.1.vlan_id}}"
+    address: "{{item.0.address}}"
+    netmask: "{{item.0.netmask}}"
+    interface_name: "{{item.0.lif_name}}"
+    admin_status: up
+    failover_policy: disabled
+    firewall_policy: data
+    is_auto_revert: false
+    https: true
     validate_certs: false
   with_nested:
     - "{{iscsi_lifs_list}}"
     - "{{iscsi_vlans_list}}"
-  when: 
+  when:
     - "('iscsi' in svm_specs.allowed_protocols)"
     - item.0.lif_fabric == item.1.vlan_fabric
   tags:
@@ -86,19 +86,19 @@
 
 # Create FCP LIF(s) on Nodes
 - name: Create FCP LIF(s) on Nodes
-  netapp.ontap.na_ontap_interface: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    role: data 
-    protocols: fcp 
-    home_node: "{{item.0.node_name}}" 
+  netapp.ontap.na_ontap_interface:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    role: data
+    protocols: fcp
+    home_node: "{{item.0.node_name}}"
     home_port: "{{item.1.home_port}}"
-    interface_name: "{{item.1.name}}" 
-    admin_status: up 
-    https: true 
+    interface_name: "{{item.1.name}}"
+    admin_status: up
+    https: true
     validate_certs: false
   with_subelements:
     - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
@@ -109,19 +109,19 @@
 
 # Create NVMe FC LIF(s) on Nodes
 - name: Create NVMe FC LIF(s) on Nodes
-  netapp.ontap.na_ontap_interface: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    role: data 
+  netapp.ontap.na_ontap_interface:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    role: data
     protocols: fc-nvme
-    home_node: "{{item.0.node_name}}" 
+    home_node: "{{item.0.node_name}}"
     home_port: "{{item.1.home_port}}"
-    interface_name: "{{item.1.name}}" 
-    admin_status: up 
-    https: true 
+    interface_name: "{{item.1.name}}"
+    admin_status: up
+    https: true
     validate_certs: false
   with_subelements:
     - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
@@ -132,24 +132,23 @@
 
 # Create Storage Virtual Machine Management LIF
 - name: Create LIF for SVM Management
-  netapp.ontap.na_ontap_interface: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    role: data 
-    protocols: none 
-    home_node: "{{svm_specs.svm_mgmt_lif.home_node}}" 
+  netapp.ontap.na_ontap_interface:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    role: data
+    home_node: "{{svm_specs.svm_mgmt_lif.home_node}}"
     home_port: "{{ifgrp_name}}-{{item.id}}"
-    address: "{{svm_specs.svm_mgmt_lif.address}}" 
-    netmask: "{{svm_specs.svm_mgmt_lif.netmask}}" 
-    interface_name: "{{svm_specs.svm_mgmt_lif.lif_name}}" 
-    admin_status: up 
-    failover_policy: broadcast-domain-wide 
-    firewall_policy: mgmt 
-    is_auto_revert: true 
-    https: true 
+    address: "{{svm_specs.svm_mgmt_lif.address}}"
+    netmask: "{{svm_specs.svm_mgmt_lif.netmask}}"
+    interface_name: "{{svm_specs.svm_mgmt_lif.lif_name}}"
+    admin_status: up
+    failover_policy: broadcast-domain-wide
+    firewall_policy: mgmt
+    is_auto_revert: true
+    https: true
     validate_certs: false
   with_items:
     - "{{ ib_mgmt_vlan_list }}"

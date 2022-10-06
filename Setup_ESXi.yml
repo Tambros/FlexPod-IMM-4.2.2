@@ -15,9 +15,9 @@
   vars_files:
     - vars/ontap_main.yml
   roles:
-    - role: ESXIiscsi
+    - role: VMware/ESXIiscsi
       when: configure_iscsi is defined
-    - role: ESXIhosts
+    - role: VMware/ESXIhosts
       when: configure_iscsi is defined
 
  
@@ -28,5 +28,5 @@
   vars_files:
     - vars/ontap_main.yml
   roles:
-    - role: ESXIhosts
+    - role: VMware/ESXIhosts
       when: configure_fc is defined

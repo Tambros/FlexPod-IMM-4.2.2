@@ -7,6 +7,7 @@
     password: "{{password}}"
     state: present
     broadcast_domain: "{{item.name}}"
+    ipspace: Default
     mtu: 1500
     https: true
     validate_certs: false
@@ -23,6 +24,7 @@
     password: "{{password}}"
     state: present
     broadcast_domain: "{{item.name}}"
+    ipspace: Default
     mtu: 9000
     https: true
     validate_certs: false
@@ -42,6 +44,7 @@
     password: "{{password}}"
     state: present
     broadcast_domain: "{{item.name}}"
+    ipspace: Default
     mtu: 9000
     https: true
     validate_certs: false
@@ -52,6 +55,26 @@
     - item.storage_protocol == "NFS"
   tags:
     - ontap_nfs_broadcast_domain
+
+# Create NVMe/TCP broadcast domain ports with Jumbo frames
+- name: Create NVMe/TCP broadcast domain ports with Jumbo frames
+  netapp.ontap.na_ontap_broadcast_domain:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    broadcast_domain: "{{item.name}}"
+    ipspace: Default
+    mtu: 9000
+    https: true
+    validate_certs: false
+  with_items:
+    - "{{storage_vlan_list}}"
+  when:
+    - "('iscsi' and 'nvme' in svm_specs.allowed_protocols)"
+    - item.storage_protocol == "NVMe"
+  tags:
+    - ontap_nvme_tcp_broadcast_domains
 
 # Create ifgroups for the 10G interfaces
 - name: Create multimode/ LACP interface groups and add data ports
@@ -91,6 +114,26 @@
   failed_when: item.node_name == None or item.node_name == ""
   tags:
     - ontap_ifgroup_mtu
+
+# Create management vlan interface
+- name: Create the management vlan interface
+  netapp.ontap.na_ontap_net_vlan:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: "{{item.1.state}}"
+    parent_interface: "{{item.2}}"
+    vlanid: "{{item.1.id}}"
+    node: "{{item.0.node_name}}"
+    https: true
+    validate_certs: false
+  with_nested:
+    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
+    - "{{ib_mgmt_vlan_list}}"
+    - "{{ifgrp_name}}"
+  failed_when: item.1.state != "present"
+  tags:
+    - ontap_vlan_interface
 
 # Create iSCSI vlans
 - name: Create the iSCSI vlans
@@ -138,6 +181,47 @@
   tags:
     - ontap_vlan_interface
 
+# Create NVMe/TCP vlans
+- name: Create the NVMe/TCP vlans
+  netapp.ontap.na_ontap_net_vlan:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: "{{item.1.state}}"
+    parent_interface: "{{item.2}}"
+    vlanid: "{{item.1.id}}"
+    node: "{{item.0.node_name}}"
+    https: true
+    validate_certs: false
+  with_nested:
+    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
+    - "{{storage_vlan_list}}"
+    - "{{ifgrp_name}}"
+  failed_when: item.1.state != "present"
+  when:
+    - "('iscsi' and 'nvme' in svm_specs.allowed_protocols)"
+    - item.1.storage_protocol == "NVMe"
+  tags:
+    - ontap_vlan_interface
+
+# Add the management vlan to the management broadcast domain
+- name: Adding management vlan to the management broadcast domain
+  netapp.ontap.na_ontap_broadcast_domain_ports:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    broadcast_domain: "{{item.1.name}}"
+    ports: "{{item.0.node_name}}:{{item.2}}-{{item.1.id}}"
+    https: true
+    validate_certs: false
+  with_nested:
+    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
+    - "{{ib_mgmt_vlan_list}}"
+    - "{{ifgrp_name}}"
+  tags:
+    - ontap_vlan_interface
+
 # Add the iSCSI vlans to the correponding broadcast domains
 - name: Adding iSCSI-A, iSCSI-B vlans to the corresponding broadcast domains
   netapp.ontap.na_ontap_broadcast_domain_ports:
@@ -180,28 +264,8 @@
   tags:
     - ontap_vlan_interface
 
-# Create management vlan interface
-- name: Create the management vlan interface
-  netapp.ontap.na_ontap_net_vlan:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    state: "{{item.1.state}}"
-    parent_interface: "{{item.2}}"
-    vlanid: "{{item.1.id}}"
-    node: "{{item.0.node_name}}"
-    https: true
-    validate_certs: false
-  with_nested:
-    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
-    - "{{ib_mgmt_vlan_list}}"
-    - "{{ifgrp_name}}"
-  failed_when: item.1.state != "present"
-  tags:
-    - ontap_vlan_interface
-
-# Add the mgmt vlan to the management broadcast domain
-- name: Adding management vlan to the management broadcast domain
+# Add the NVMe/TCP vlans to the correponding broadcast domains
+- name: Adding NVMe-TCP-A, NVMe-TCP-B vlans to the corresponding broadcast domains
   netapp.ontap.na_ontap_broadcast_domain_ports:
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
@@ -213,7 +277,10 @@
     validate_certs: false
   with_nested:
     - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
-    - "{{ib_mgmt_vlan_list}}"
+    - "{{storage_vlan_list}}"
     - "{{ifgrp_name}}"
+  when:
+    - "('iscsi' and 'nvme' in svm_specs.allowed_protocols)"
+    - item.1.storage_protocol == "NVMe"
   tags:
     - ontap_vlan_interface

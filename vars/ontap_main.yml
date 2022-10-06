@@ -8,34 +8,53 @@
 ##################################################################################################################################################
 
 #Name of the ONTAP Cluster
-cluster_name: cluster_name
+cluster_name: aa02-a800
 
 #Location of the ONTAP Cluster
-cluster_location: NewYork
+cluster_location: "Cisco RTP, Building 4, Lab 141, AA02"
 
 #Cluster management LIF already exists (pre-requisite), so note down name of cluster management LIF and enter below.
 cluster_mgmt_interface: cluster_mgmt
 
 #List the ONTAP Licenses for the different features that you need
 ontap_license:
-  - <License key for feature 1>
-  - <License key for feature 2>
-  - <License key for feature 3>
+  - WGIYDYLHSOVOGDKGPBCAAAAAAAAA
+  - ERVGKUFRYVHXCFKGPBCAAAAAAAAA
+  - QLTVKUFRYVHXCFKGPBCAAAAAAAAA
+  - IBGNEYLHSOVOGDKGPBCAAAAAAAAA
+  - UVDCFYLHSOVOGDKGPBCAAAAAAAAA
+  - CGRKLUFRYVHXCFKGPBCAAAAAAAAA
+  - OAPZLUFRYVHXCFKGPBCAAAAAAAAA
+  - GQBRFYLHSOVOGDKGPBCAAAAAAAAA
+  - QZUJHYLHSOVOGDKGPBCAAAAAAAAA
+  - YJISNUFRYVHXCFKGPBCAAAAAAAAA
+  - MPKDNUFRYVHXCFKGPBCAAAAAAAAA
+  - EFXUGYLHSOVOGDKGPBCAAAAAAAAA
+  - OOQNIYLHSOVOGDKGPBCAAAAAAAAA
+  - WYDWOUFRYVHXCFKGPBCAAAAAAAAA
+  - CUSYHYLHSOVOGDKGPBCAAAAAAAAA
+  - KEGHOUFRYVHXCFKGPBCAAAAAAAAA
+  - UNZZPUFRYVHXCFKGPBCAAAAAAAAA
+  - MDMRJYLHSOVOGDKGPBCAAAAAAAAA
+  - QFSVOYLHSOVOGDKGPBCAAAAAAAAA
+  - YPFEVUFRYVHXCFKGPBCAAAAAAAAA
+  - MVHPUUFRYVHXCFKGPBCAAAAAAAAA
+  - ELUGOYLHSOVOGDKGPBCAAAAAAAAA
 
 #Details for configuring NetApp AutoSupport
 autosupport_vars:
-  mail_hosts: "mailhost"
-  noteto: "admin@netapp.com"
+  mail_hosts: 10.102.1.150
+  noteto: "jogeorg2.com"
   proxy_url: #Optional: If authentication is used, use format: "username:password@host:port"
   from_address: "ontap_cluster@netapp.com"
-  to_addresses: admin1@netapp.com,admin2@netapp.com
+  to_addresses: "jogeorg2@cisco.com"
 
 #SNMP related variables
-enable_snmp: true
+enable_snmp: false
 #Please make sure to fill out the below details if you have chosen to enable SNMP, leaving it empty will cause the setup to fail
-snmp_contact: "Administrator"
-snmp_location: "New York"
-traphost_ip: "192.168.10.10"
+snmp_contact: "jogeorg2@cisco.com"
+snmp_location: "Cisco RTP, Building 4, Lab 141, AA02"
+traphost_ip: "10.102.1.95"
 snmp_community: "FlexPod"
 
 #SNMPv3 related variables
@@ -45,98 +64,107 @@ authentication_password: <enter password>   #Password for the authentication pro
 privacy_protocol: none   #Privacy protocol for the snmp user (Choices: none, des, aes128)
 privacy_password: <enter password>   #Password for the privacy protocol
 
+#Cluster Login banner Text message
+cluster_login_banner: Access restricted to authorized users
+
 ##################################################################################################################################################
 # Node/ Controller level information
 ##################################################################################################################################################
 
 ha_pairs:
-  - ha_no: 1										
-    node_port_count: "8"		
-    node_data_ports: ["e0e","e0f","e0g","e0h"]
-    node_fcp_ports: ["5a","5b"]
+  - ha_no: 1
+    node_port_count: "2"
+    node_data_ports: ["e5a","e5b"]
+    node_fcp_ports: ["2a","2b","2c","2d"]
     fcp_port_speed: "32"
     node_specs:
-    - node_name: node-01
-      sp: {ip: 192.168.20.10, mask: 255.255.255.0, gateway: 192.168.20.1}
-      node_mgmt_ip: 192.168.20.11
-      partner_mgmt_ip: 192.168.20.13
-      data_aggregates: 
-        - {aggr_name: aggr01_node01_nvme, disk_type: SSD-NVM, diskcount: 23}  #Options for disk_type: SAS, SSD, SSD-NVM 
-      nfs_lifs: {name: nfs-lif-01, address: 192.168.30.11, netmask: 255.255.255.0}  #Fill out this value only if nfs will be mentioned under allowed_protocols in svm_specs
+    - node_name: aa02-a800-01
+      sp: {ip: 10.102.0.28, mask: 255.255.255.0, gateway: 10.102.0.254 }
+      node_mgmt_ip: 10.102.0.31
+      partner_mgmt_ip: 10.102.0.32
+      data_aggregates:
+        - {aggr_name: aa02_a800_01_NVME_SSD_1, disk_type: SSD-NVM, diskcount: 23}  #Options for disk_type: SAS, SSD, SSD-NVM
+      nfs_lifs: {name: nfs-lif-01, address: 192.168.50.31, netmask: 255.255.255.0}  #Fill out this value only if nfs will be mentioned under allowed_protocols in svm_specs
       fcp_lifs:    #Fill out this value only if fcp will be mentioned under allowed_protocols in svm_specs
-        - {name: fcp-lif-01a, home_port: 5a, fabric: A}  #Do not change the fabric ID
-        - {name: fcp-lif-01b, home_port: 5b, fabric: B}  #Do not change the fabric ID
+        - {name: fcp-lif-01a, home_port: 2a, fabric: A}  #Do not change the fabric ID
+        - {name: fcp-lif-01b, home_port: 2b, fabric: B}  #Do not change the fabric ID
       fc-nvme_lifs:    #Fill out this value only if nvme will be mentioned under allowed_protocols in svm_specs
-        - {name: fc-nvme-lif-01a, home_port: 5a, fabric: A}  #Do not change the fabric ID
-        - {name: fc-nvme-lif-01b, home_port: 5b, fabric: B}  #Do not change the fabric ID
+        - {name: fc-nvme-lif-01a, home_port: 2c, fabric: A}  #Do not change the fabric ID
+        - {name: fc-nvme-lif-01b, home_port: 2d, fabric: B}  #Do not change the fabric ID
       iscsi_lifs:  #Fill out this value only if iscsi will be mentioned under allowed_protocols in svm_specs. Provide one iSCSI LIF per iSCSI VLAN
-        - {name: iscsi-lif-01a, address: 192.168.40.11, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
-        - {name: iscsi-lif-01b, address: 192.168.50.11, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID    
-    - node_name: node-02
-      sp: {ip: 192.168.20.12, mask: 255.255.255.0, gateway: 192.168.20.1}
-      node_mgmt_ip: 192.168.20.13
-      partner_mgmt_ip: 192.168.20.11
-      data_aggregates: 
-        - {aggr_name: aggr01_node02_nvme, disk_type: SSD-NVM, diskcount: 23}  #Options for disk_type: SAS, SSD, SSD-NVM     
-      nfs_lifs: {name: nfs-lif-02, address: 192.168.30.13, netmask: 255.255.255.0}  #Fill out this value only if nfs will be mentioned under allowed_protocols in svm_specs
+        - {name: iscsi-lif-01a, address: 192.168.10.31, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
+        - {name: iscsi-lif-01b, address: 192.168.20.31, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
+    - node_name: aa02-a800-02
+      sp: {ip: 10.102.0.29, mask: 255.255.255.0, gateway: 10.102.0.254}
+      node_mgmt_ip: 10.102.0.32
+      partner_mgmt_ip: 10.102.0.31
+      data_aggregates:
+        - {aggr_name: aa02_a800_02_NVME_SSD_1, disk_type: SSD-NVM, diskcount: 23}  #Options for disk_type: SAS, SSD, SSD-NVM
+      nfs_lifs: {name: nfs-lif-02, address: 192.168.50.32, netmask: 255.255.255.0}  #Fill out this value only if nfs will be mentioned under allowed_protocols in svm_specs
       fcp_lifs:    #Fill out this value only if fcp will be mentioned under allowed_protocols in svm_specs
-        - {name: fcp-lif-02a, home_port: 5a, fabric: A}  #Do not change the fabric ID
-        - {name: fcp-lif-02b, home_port: 5b, fabric: B}  #Do not change the fabric ID
+        - {name: fcp-lif-02a, home_port: 2a, fabric: A}  #Do not change the fabric ID
+        - {name: fcp-lif-02b, home_port: 2b, fabric: B}  #Do not change the fabric ID
       fc-nvme_lifs:    #Fill out this value only if nvme will be mentioned under allowed_protocols in svm_specs
-        - {name: fc-nvme-lif-02a, home_port: 5a, fabric: A}  #Do not change the fabric ID
-        - {name: fc-nvme-lif-02b, home_port: 5b, fabric: B}  #Do not change the fabric ID
+        - {name: fc-nvme-lif-02a, home_port: 2c, fabric: A}  #Do not change the fabric ID
+        - {name: fc-nvme-lif-02b, home_port: 2d, fabric: B}  #Do not change the fabric ID
       iscsi_lifs:  #Fill out this value only if iscsi will be mentioned under allowed_protocols in svm_specs. Provide one iSCSI LIF per iSCSI VLAN
-        - {name: iscsi-lif-02a, address: 192.168.40.13, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
-        - {name: iscsi-lif-02b, address: 192.168.50.13, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
+        - {name: iscsi-lif-02a, address: 192.168.10.32, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
+        - {name: iscsi-lif-02b, address: 192.168.20.32, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
 
 ##################################################################################################################################################
 #SVM specific variables
 ##################################################################################################################################################
 
 svm_specs:
-  svm_name: Infra_SVM
+  svm_name: Infra-SVM
   svm_root_vol: Infra_SVM_root
   allowed_protocols: #provide the values in lower case only, supported options for this solution are nfs, fcp, iscsi, nvme
     - nfs
     - fcp
     - nvme
-  client_match: 192.168.30.0/24
+    - iscsi
+  client_match: 192.168.50.0/24
   data_protocol: nfs
   data_volumes:
-    - {name:  infra_datastore_01, size: 1024, residing_aggr: aggr01_node01_nvme}
-    - {name:  infra_datastore_02, size: 1024, residing_aggr: aggr01_node02_nvme}
+    - {name:  infra_datastore, size: 1024, residing_aggr: aa02_a800_02_NVME_SSD_1}
   swap_volumes:
-    - {name: infra_swap, size: 200, residing_aggr: aggr01_node01_nvme}
+    - {name: infra_swap, size: 200, residing_aggr: aa02_a800_01_NVME_SSD_1}
   nvme_datastores:
-    - {name: NVMe_datastore_01, size: 100, residing_aggr: aggr01_node01_nvme} #Use the data aggregates with disk_type as SSD-NVM
-    - {name: NVMe_datastore_02, size: 100, residing_aggr: aggr01_node02_nvme}   
+    - {name: nvme_datastore, size: 1024, residing_aggr: aa02_a800_01_NVME_SSD_1} #Use the data aggregates with disk_type as SSD-NVM
+  vcls_datastores:  #vCLS datastores to be used by the vSphere environment to host vSphere Cluster Services (vCLS)
+    - {name: vCLS, size: 100, residing_aggr: aa02_a800_01_NVME_SSD_1}
+#    - {name: vcls_datastore2, size: 100, residing_aggr: aa02_a800_02_NVME_SSD_1}   
   data_luns:
   boot_volumes:
-    - {name: esxi_boot, size: 320, residing_aggr: aggr01_node01_nvme}
+    - {name: esxi_boot, size: 1024, residing_aggr: aa02_a800_01_NVME_SSD_1}
   boot_luns:
-    - {name: VM-Host-Infra-01, size: 32, residing_vol: esxi_boot}
-    - {name: VM-Host-Infra-02, size: 32, residing_vol: esxi_boot}
-    - {name: VM-Host-Infra-03, size: 32, residing_vol: esxi_boot}
+    - {name: aa02-esxi-1, size: 128, residing_vol: esxi_boot}
+    - {name: aa02-esxi-2, size: 128, residing_vol: esxi_boot}
+    - {name: aa02-esxi-3, size: 128, residing_vol: esxi_boot}
+    - {name: aa02-esxi-4, size: 128, residing_vol: esxi_boot}
+    - {name: aa02-esxi-5, size: 128, residing_vol: esxi_boot}
+    - {name: aa02-esxi-6, size: 128, residing_vol: esxi_boot}
   nvme_specs:
-    subsystem: 
+    subsystem:
       - {name: nvme_infra_host_01_02_03_04, nqn: ["nqn.2014-08.com.cisco.flexpod:nvme:bb04-esxi-1","nqn.2014-08.com.cisco.flexpod:nvme:bb04-esxi-2","nqn.2014-08.com.cisco.flexpod:nvme:bb04-esxi-3","nqn.2014-08.com.cisco.flexpod:nvme:bb04-esxi-4"]}  #Name of the subsystem and obtain all the NQNs from the host
     namespaces:  #Mention the namespaces that you want to create and map to this subsystem
-      - {name: NVMe_namespace_01, size: 50, residing_vol: NVMe_datastore_01}  #Use NVMe datastore as residing volume here
-      - {name: NVMe_namespace_02, size: 50, residing_vol: NVMe_datastore_02}  #Enter size values in gb
+      - {name: NVMe_namespace, size: 50, residing_vol: nvme_datastore}  #Use NVMe datastore as residing volume here
   iscsi_igroups:
     - {name: VM-Host-Infra-01-ISCSI, iqn: ["iqn.1992-08.com.cisco:ucs-host:1"]}
     - {name: VM-Host-Infra-02-ISCSI, iqn: ["iqn.1992-08.com.cisco:ucs-host:2"]}
   fcp_igroups:
-    - {name: VM-Host-Infra-01-FCP, wwpn: ["20:00:00:25:b5:a1:6a:01","20:00:00:25:b5:a1:6b:01"]}
-    - {name: VM-Host-Infra-02-FCP, wwpn: ["20:00:00:25:B5:A1:6A:03","20:00:00:25:B5:A1:6b:03"]}
-    - {name: VM-Host-Infra-03-FCP, wwpn: ["20:00:00:25:B5:A1:6A:05","20:00:00:25:B5:A1:6b:05"]}
-  svm_mgmt_lif: {home_node: node-01, address: 192.168.20.18, netmask: 255.255.255.0, gateway: 192.168.20.1, lif_name: svm-mgmt}
-  vsadmin_password: <password>
+    - {name: aa02-esxi-1-FCP, wwpn: ["20:00:00:25:B5:A2:0A:01","20:00:00:25:B5:A2:0B:01"]}
+    - {name: aa02-esxi-3-FCP, wwpn: ["20:00:00:25:B5:A2:0A:02","20:00:00:25:B5:A2:0B:02"]}
+    - {name: aa02-esxi-4-FCP, wwpn: ["20:00:00:25:B5:A2:0A:04","20:00:00:25:B5:A2:0B:04"]}
+  svm_mgmt_lif: {home_node: aa02-a800-01, address: 10.102.1.30, netmask: 255.255.255.0, gateway: 10.102.1.254, lif_name: svm-mgmt}
+  vsadmin_password: NetApp!23
   os_type: vmware
   dns_server_svm:
-    - 192.168.20.20
-    - 192.168.20.21
-  dns_domain_svm: "vmwaresvm.flexpod.com"
+    - 10.102.1.151
+    - 10.102.1.152
+  dns_domain_svm: "flexpodb4.cisco.com"
+  svm_login_banner: The infra_svm is reserved for authorized users only!  #SVM Login banner Text message
+  audit_log_path: /audit_log  #Audit log destination path where consolidated audit logs will be stored. The path can be up to 864 characters in length and must have read-write permissions. 
 
 ##################################################################################################################################################
 # Default/Best Practice related information - Change only if required
@@ -152,4 +180,4 @@ ifgrp_mode: multimode_lacp
 
 #Job Schedule
 job_schedule:
-  - {job_name: 15min,job_minutes: 15}
+  - {job_name: 15min, job_minutes: 15}

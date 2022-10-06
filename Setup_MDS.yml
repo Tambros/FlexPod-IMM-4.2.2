@@ -1,5 +1,5 @@
 ---
-# Example Playbook: VLAN configuration using the [ucs] hosts group
+# Playbook: Configure the Cisco MDS Switches in FlexPod
 - hosts: mds
   connection: network_cli
   gather_facts: no

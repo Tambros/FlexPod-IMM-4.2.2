@@ -1,3 +1,4 @@
+---
 # Getting the node-aggr-lif map list
 - name: Get the node-aggregate-lif map list
   set_fact:
@@ -11,6 +12,7 @@
   tags:
     - nfs_ds_lif_map
     - swap_ds_lif_map
+    - vcls_ds_lif_map
 
 # Getting the NFS datastore and NFS LIF map list
 - name: Get the NFS datastore and NFS LIF map list
@@ -33,3 +35,14 @@
   when: item.0.aggr_name == item.1.residing_aggr
   tags:
     - swap_ds_lif_map
+
+# Getting the vCLS datastore and NFS LIF map list
+- name: Get the vCLS datastore and NFS LIF map list
+  set_fact:
+    vcls_ds_lif_map: "{{ vcls_ds_lif_map|default([]) + [ {'datastore_name': item.1.name, 'nfs_lif_ip': item.0.nfs_lif_ip} ] }}"
+  with_nested:
+    - "{{ node_aggr_lif_map }}"
+    - "{{ svm_specs.vcls_datastores }}"
+  when: item.0.aggr_name == item.1.residing_aggr
+  tags:
+    - vcls_ds_lif_map

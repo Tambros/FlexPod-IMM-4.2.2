@@ -37,18 +37,18 @@
     - ontap_config_svm
 
 # Enable NFS protocol with vstorage enabled for VAAI plugin. Adding NFSv4.1 attribute as well
-- name: Enable NFS protcol with vstorage 
-  netapp.ontap.na_ontap_nfs: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    vstorage_state: enabled 
-    service_state: started 
+- name: Enable NFS protcol with vstorage
+  netapp.ontap.na_ontap_nfs:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    vstorage_state: enabled
+    service_state: started
     nfsv41: enabled
-    udp: disabled 
-    https: true 
+    udp: disabled
+    https: true
     validate_certs: false
   when:
     - "('nfs' in svm_specs.allowed_protocols)"
@@ -72,17 +72,17 @@
 
 # Create mirror volumes for the root volume
 - name: Create the load-sharing mirror volumes for the root volume
-  netapp.ontap.na_ontap_volume: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    name: "{{item.1}}"  
-    aggregate_name: "{{item.0.aggr_name}}" 
-    size: 1  
-    type: DP 
-    https: true 
+  netapp.ontap.na_ontap_volume:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    name: "{{item.1}}"
+    aggregate_name: "{{item.0.aggr_name}}"
+    size: 1
+    type: DP
+    https: true
     validate_certs: false
   with_together:
     - "{{ ha_pairs | map(attribute='node_specs') | flatten | map(attribute='data_aggregates') | flatten }}"
@@ -93,14 +93,14 @@
 
 # Create Job schedule for the root volume
 - name: Create a job schedule for the snapmirror of root volume
-  netapp.ontap.na_ontap_job_schedule: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    name: "{{item.job_name}}" 
-    job_minutes: "{{item.job_minutes}}" 
-    https: true 
+  netapp.ontap.na_ontap_job_schedule:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    name: "{{item.job_name}}"
+    job_minutes: "{{item.job_minutes}}"
+    https: true
     validate_certs: false
   with_items:
     - "{{job_schedule}}"
@@ -141,17 +141,17 @@
   with_sequence: start=1 end="{{ total_aggr_count }}" format={{ svm_specs.svm_root_vol }}_m0%1x
   tags:
     - ontap_snapmirror_relationship
-    
+
 # Create and enable iSCSI service
 - name: Create and enable iSCSI service
-  netapp.ontap.na_ontap_iscsi: 
-    hostname: "{{inventory_hostname}}" 
-    username: "{{username}}" 
-    password: "{{password}}" 
-    state: present 
-    vserver: "{{svm_specs.svm_name}}" 
-    service_state: started 
-    https: true 
+  netapp.ontap.na_ontap_iscsi:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    state: present
+    vserver: "{{svm_specs.svm_name}}"
+    service_state: started
+    https: true
     validate_certs: false
   when: "('iscsi' in svm_specs.allowed_protocols)"
   tags:
@@ -223,3 +223,30 @@
     validate_certs: false
   tags:
     - ontap_unlock_vsadmin
+
+# Create login banner for the Storage Virtual Machine
+- name: Create login banner for the SVM
+  netapp.ontap.na_ontap_login_messages:
+    vserver: "{{item.svm_name}}"
+    banner: "{{item.svm_login_banner}}"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    https: true
+    validate_certs: false 
+  with_items:
+    - "{{svm_specs}}"
+  tags:
+    - ontap_svm_login_banner
+
+# Remove insecure ciphers from the Storage Virtual Machine. Ciphers with the suffix CBC are considered insecure
+- name: Remove insecure ciphers from the SVM
+  netapp.ontap.na_ontap_command:
+    command: "['security', 'ssh', 'remove', '-vserver', '{{svm_specs.svm_name}}', '-ciphers', 'aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc']"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    https: true
+    validate_certs: false
+  tags:
+    - ontap_remove_insecure_ciphers

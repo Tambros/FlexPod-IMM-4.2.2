@@ -16,10 +16,30 @@
   tags:
     - ontap_config_dns_infra
 
+# Create and enable auditing configuration for the Storage Virtual Machine
+- name: Create and enable auditing configuration for the SVM
+  netapp.ontap.na_ontap_restit:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    api: protocols/audit
+    method: POST
+    vserver_name: "{{item.svm_name}}"
+    body:
+      enabled: true
+      log_path: "{{item.audit_log_path}}"
+    https: true
+    validate_certs: false 
+    wait_for_completion: true
+  with_items:
+    - "{{svm_specs}}"
+  tags:
+    - ontap_svm_audit_config
+
 # Waiting for configuration to update
 - name: Waiting for configuration to update
   pause:
-    seconds: 90 
+    seconds: 90
 
 # Create the HA pairs count variable
 - name: Create the HA pairs count variable
@@ -48,12 +68,13 @@
 
 # Invoke a Test AutoSupport
 - name: Send a test to AutoSupport
-  netapp.ontap.na_ontap_command:
+  netapp.ontap.na_ontap_autosupport_invoke:
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     https: true
     validate_certs: false
-    command: ['autosupport', 'invoke', '-node', '*', '-type', 'all', '-message', '"ONTAP Setup Completed for FlexPod Datacenter with VMware vSphere 7.0U2 and NetApp ONTAP."']
+    autosupport_message: FlexPod storage configuration completed
+    type: all
   tags:
     - ontap_invoke_autosupport

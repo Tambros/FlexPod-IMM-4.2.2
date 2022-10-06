@@ -3,6 +3,8 @@
   #
   # Configure Features
   - include_tasks: configure_mds_features.yml
+  # Configure DNS Client
+  - include_tasks: configure_domain_lookup.yml
   # Configure NTP Servers
   - include_tasks: configure_mds_ntp.yml
   # Configure Interface, Port-Channel and Trunk Settings

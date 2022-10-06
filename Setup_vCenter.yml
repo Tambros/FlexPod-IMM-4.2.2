@@ -11,7 +11,7 @@
 - hosts: localhost
 #
   roles:
-    - VMWAREvcenter
+    - VMware/VMWAREvcenter
 
 ################################################################################
 #
@@ -25,13 +25,35 @@
 - hosts: esxi_iscsi
   gather_facts: no
   serial: 1
+  vars_files:
+    - roles/VMware/ESXIiscsi/defaults/main.yml
   roles:
-    - role: ESXIpostvC
+    - role: VMware/ESXIpostvC
+      when: configure_iscsi is defined
+    - role: VMware/ESXIpostvCiscsi
       when: configure_iscsi is defined
 
 - hosts: esxi_fc
   gather_facts: no
   serial: 1
   roles:
-    - role: ESXIpostvC
+    - role: VMware/ESXIpostvC
       when: configure_fc is defined
+
+################################################################################
+#
+# vCenter Setup Section After Adding Hosts to vCenter
+# VMWare vCenter and the ESXi hosts must be installed and available
+# using the IP addresses and passwords provided. The ESXi addresses and
+# passwords are part of inventory file. The vCenter connectivity info is
+# included in group_vars/all.yml
+#
+#
+################################################################################
+- hosts: localhost
+#
+  vars_files:
+    - vars/ontap_main.yml
+  roles:
+    - VMware/VMWAREvcenterpostESXI
+#

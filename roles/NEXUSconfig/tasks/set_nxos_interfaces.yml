@@ -33,15 +33,15 @@
               mode: active
     with_list: "{{ peerlink_interface_list }}"
 
-  # This task adds ports to the management switch port-channels
-  - name: Add Ports to management switch Port-Channel
+  # This task adds ports to the uplink switch port-channels
+  - name: Add Ports to uplink switch Port-Channel
     cisco.nxos.nxos_lag_interfaces:
       config:
-        - name: "{{ mgmt_PC[0].interface }}"
+        - name: "{{ uplink_PC[0].interface }}"
           members:
             - member: "{{ item.interface }}"
               mode: active
-    with_list: "{{ mgmt_interface_list  }}"
+    with_list: "{{ uplink_interface_list  }}"
 
   # This task adds ports to the FI-A port-channels
   - name: Add Ports to FI-A Port-Channel
@@ -84,7 +84,7 @@
     with_list: "{{ storage_B_interface_list }}"
 #
 # This task sets up speed and duplex settings for the peer link
-  - name: Modify the mtu speed and duplex for ports
+  - name: Modify the speed and duplex for peer link
     cisco.nxos.nxos_interfaces:
       config:
         - name: "{{ item.interface }}"
@@ -100,7 +100,7 @@
           mtu: "9216"
           speed: "{{ item.speed }}"
           duplex: "{{ item.duplex }}"
-    with_list: "{{ mgmt_PC + FI_A_PC + FI_B_PC + storage_A_PC + storage_B_PC }}"
+    with_list: "{{ uplink_PC + FI_A_PC + FI_B_PC + storage_A_PC + storage_B_PC }}"
 #
 # Configure Trunk VLANs for Peer-Link and UCS FI Port-Channels
 #
@@ -115,14 +115,14 @@
 #
 # Configure VLANs mgmt Port-Channels
 #
-  - name: Enabling management vlans on management Port-Channels
+  - name: Enabling management vlans on uplink Port-Channels
     cisco.nxos.nxos_l2_interfaces:
       config:
         - name: "{{ item.interface }}"
           trunk:
             native_vlan: "{{ native_vlan_id }}"
             allowed_vlans: "{{ mgmt_vlans_list }}"
-    with_list: "{{ mgmt_PC }}"
+    with_list: "{{ uplink_PC }}"
 #
 # Configure VLANs for storage Port-Channels
 #
@@ -157,3 +157,12 @@
         - spanning-tree port type edge trunk
       parents: interface {{ item.interface }}
     with_list: "{{ FI_A_PC + FI_B_PC + storage_A_PC + storage_B_PC }}"
+#
+  # This task sets:
+  # "Spanning-tree port type normal" on the Uplink Port-Channel
+  - name: Set - spanning-tree port type normal
+    cisco.nxos.nxos_config:
+      lines:
+        - spanning-tree port type normal
+      parents: interface {{ item.interface }}
+    with_list: "{{ uplink_PC }}"

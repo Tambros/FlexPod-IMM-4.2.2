@@ -9,6 +9,8 @@
   - include_tasks: configure_nxos_features.yml
   # Configure Spanning tree and port-channel load-balancing
   - include_tasks: configure_nxos_global_settings.yml
+  # Configure DNS domain lookup
+  - include_tasks: configure_domain_lookup.yml
   # Configure vlans
   - include_tasks: configure_nxos_vlans.yml
   # Configure NTP Distribution

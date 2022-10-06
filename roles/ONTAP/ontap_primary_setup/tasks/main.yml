@@ -9,14 +9,13 @@
     username: "{{username}}"
     password: "{{password}}"
     https: true
-    validate_certs: false 
+    validate_certs: false
   tags:
     - ontap_cluster_location_update
 
 # Ensure that the auto-revert parameter is set for the cluster management interface
 - name: Ensure auto-revert is set for the cluster management interface
   netapp.ontap.na_ontap_interface:
-    vserver: "{{cluster_name}}"
     is_auto_revert: "{{cluster_mgmt_auto_revert}}"
     interface_name: "{{cluster_mgmt_interface}}"
     hostname: "{{inventory_hostname}}"
@@ -49,6 +48,7 @@
   netapp.ontap.na_ontap_broadcast_domain:
     state: absent
     name: "{{item}}"
+    ipspace: Default
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -68,6 +68,7 @@
     node: "{{item.node_name}}"
     is_enabled: true
     address_type: ipv4
+    dhcp: none
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -77,12 +78,12 @@
     - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
   tags:
     - ontap_config_sp_interface
-    
+
 # Create data aggregates
 - name: Create the data aggregates
   netapp.ontap.na_ontap_aggregate:
     state: present
-    name: "{{item.1.aggr_name}}" 
+    name: "{{item.1.aggr_name}}"
     disk_count: "{{item.1.diskcount}}"
     disk_type: "{{item.1.disk_type}}"
     nodes: "{{item.0.node_name}}"
@@ -96,27 +97,9 @@
     - data_aggregates
   when:
     - item.1.aggr_name is defined and item.1.aggr_name != None
-    - item.1.disk_type == "SSD" or item.1.disk_type == "SAS"
+    - item.1.disk_type == "SSD" or item.1.disk_type == "SAS" or item.1.disk_type == "SSD-NVM"
   tags:
     - ontap_create_data_aggr
-
-# Create NVMe aggregates
-- name: Create NVMe aggregates
-  netapp.ontap.na_ontap_command:
-    command: ['aggregate', 'create', '-aggregate', '{{item.1.aggr_name}}', '-node', '{{item.0.node_name}}', '-diskcount', '{{item.1.diskcount}}', '-disktype', '{{item.1.disk_type}}']
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    https: true
-    validate_certs: false
-  with_together:
-    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
-    - "{{ ha_pairs | map(attribute='node_specs') | flatten | map(attribute='data_aggregates') | flatten }}"
-  when:
-    - item.1.aggr_name is defined and item.1.aggr_name != None
-    - item.1.disk_type == "SSD-NVM"
-  tags:
-    - ontap_create_nvme_aggr
 
 # Zero All Spare Disks
 - name: Zero all the spare disks
@@ -461,3 +444,40 @@
   when: enable_snmp == true
   tags:
     - ontap_config_snmpv3_access
+
+# Create login banner for the ONTAP Cluster
+- name: Create login banner for the ONTAP Cluster
+  netapp.ontap.na_ontap_login_messages:
+    banner: "{{cluster_login_banner}}"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    https: true
+    validate_certs: false 
+  tags:
+    - ontap_cluster_login_banner
+
+# Enable FIPS Mode on the ONTAP Cluster
+- name: Enable FIPS on the ONTAP Cluster
+  netapp.ontap.na_ontap_security_config:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    name: ssl
+    is_fips_enabled: true
+    https: true
+    validate_certs: false
+  tags:
+    - ontap_enable_fips
+
+# Remove insecure ciphers from the ONTAP Cluster. Ciphers with the suffix CBC are considered insecure
+- name: Remove insecure ciphers from the ONTAP Cluster
+  netapp.ontap.na_ontap_command:
+    command: "['security', 'ssh', 'remove', '-vserver', '{{cluster_name}}', '-ciphers', 'aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc']"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    https: true
+    validate_certs: false
+  tags:
+    - ontap_remove_insecure_ciphers

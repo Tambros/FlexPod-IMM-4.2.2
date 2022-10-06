@@ -1,3 +1,4 @@
+---
 # Create NVMe namespace
 - name: Create NVMe namespace
   netapp.ontap.na_ontap_nvme_namespace:
@@ -44,12 +45,12 @@
     ns_paths_list: "{{ns_paths_list | default([])}} + ['/vol/{{item.residing_vol}}/{{item.name}}']"
   with_items:
     - "{{ svm_specs.nvme_specs.namespaces }}"
-  when: 
+  when:
     - "('nvme' in svm_specs.allowed_protocols)"
     - item is defined and item != None
   tags:
     - ontap_map_namespace_to_subsystem
-    
+
 # Map the namespaces to the NVMe subsystem
 - name: Map the namespaces to the subsystem
   netapp.ontap.na_ontap_nvme_subsystem:
