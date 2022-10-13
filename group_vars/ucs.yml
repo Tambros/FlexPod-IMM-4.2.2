@@ -19,13 +19,13 @@ org_name      : "AA02"
 ##############################################################################
 
 # Server CPU Type - set to Intel or AMD
-server_cpu_type: "AMD"
+server_cpu_type: "Intel"
 
 # VIC Type - set to 4G for 4th Gen VICs or 5G for 5th Gen VICs - Also add 4G or 5G to Server Profile Template Name
 vic_type: "4G"
 
 # UCS VIC Slot ID - Slot ID of the device. Supported values are ( 1 - 255, "MLOM", "L1", "L2" ) - Also add an indicator of this to FC and iSCSI LAN Connectivity Policy Names
-vic_slot_id: "2"
+vic_slot_id: "MLOM"
 
 ###############################################################################
 #
@@ -101,7 +101,7 @@ netmask_iscsi_b                       : "255.255.255.0"
 # IQN Pool
 name_of_iqn_pool                      : "{{ prefix }}-IQN-Pool"
 prefix_for_iqn                        : "iqn.2010-11.com.flexpod"
-suffix_for_iqn                        : "aa02-ucshost"
+suffix_for_iqn                        : "{{ prefix }}-ucshost"
 iqn_start                             : 01
 size_of_iqn_pool                      : 32
 
@@ -118,8 +118,6 @@ name_of_m5_bios_policy     : "{{ prefix }}-Intel-M5-Virt-BIOS"
 # IMC Access Policy - Configures the KVM to be accessed In-Band
 # The in-band vlan must be enabled on the trunk between Nexus 9K and UCS FI
 name_of_imc_access_policy           : "{{ prefix }}-IMC-Access-Policy"
-#vlan_for_cimc_access                : "{{ oob_vlan_id }}"
-vlan_for_cimc_access                : 1020
 
 # KVM Access Policy - Enables (true) or disables (false) Tunneled KVM Server Access
 # Ensure the Intersight Account allows Tunneled KVM> To enable Tunneled KVM for 
@@ -157,17 +155,9 @@ name_of_ethernet_adapter_16rxq_policy  : "{{ prefix }}-EthAdapter-16RXQs-{{ vic_
 
 # Ethernet Network Group Policy - VLAN details of vNICs assigned to virtual switches for Management and Infra NFS VLANs
 name_of_network_group_policy_for_management         : "{{ prefix }}-vSwitch0-NetGrp-Policy"
-#native_vlan_for_mgmt_vnic                           : "{{ ib_vlan_id }}"
-#allowed_vlans_for_mgmt_vnic                         : "{{ ib_vlan_id }},{{ oob_vlan_id }},{{ nfs_vlan_id }}"
-native_vlan_for_mgmt_vnic                           : 1021
-allowed_vlans_for_mgmt_vnic                         : "1021,1020,3050"
 
 # Ethernet Network Group Policy - VLANs details of vNIC assigned to vDS for vMotion, VM-Traffic, and optional Infra-NFS VLANs
 name_of_network_group_policy_for_vds          : "{{ prefix }}-vDS0-NetGrp-Policy"
-#native_vlan_for_vds_vnic                      : "{{ native_vlan_id }}" 
-#allowed_vlans_for_vds_vnic                    : "{{ vm_vlan_id }},{{ vmotion_vlan_id }},{{ nfs_vlan_id }}"
-native_vlan_for_vds_vnic                      : 2
-allowed_vlans_for_vds_vnic                    : "1022,3000,3050"
 
 # Ethernet Network Group Policies for iSCSI interfaces (only required when configure_iscsi== true) 
 # Ignore the configuration for iSCSI-A and iSCSI-B Network Group policies if iSCSI is not configured
@@ -175,18 +165,10 @@ allowed_vlans_for_vds_vnic                    : "1022,3000,3050"
 # Ethernet Network Group Policy - VLAN details of iscsi-a vNIC Interface
 # iSCSI-A VLAN will be set as Native VLAN - NVMe-TCP-A VLAN Added if using NVMe-TCP
 name_of_network_group_policy_for_iscsi_a                : "{{ prefix }}-iSCSI-A-NetGrp-Policy"
-#native_vlan_for_iscsi_a_vnic                            : "{{ iscsiA_vlan_id }}"
-#allowed_vlans_for_iscsi_a_vnic                          : "{{ iscsiA_vlan_id }},{{ nvme_tcpA_vlan_id }}"
-native_vlan_for_iscsi_a_vnic                            : 3010
-allowed_vlans_for_iscsi_a_vnic                          : "3010,3030"
 
 # Ethernet Network Group Policy - VLAN details of iscsi-b vNIC Interface
 # iSCSI-B allowed VLAN will be set as Native VLAN - NVMe-TCP-B VLAN Added
 name_of_network_group_policy_for_iscsi_b                : "{{ prefix }}-iSCSI-B-NetGrp-Policy"
-#native_vlan_for_iscsi_b_vnic                            : "{{ iscsiB_vlan_id }}"
-#allowed_vlans_for_iscsi_b_vnic                          : "{{ iscsiB_vlan_id }},{{ nvme_tcpB_vlan_id }}"
-native_vlan_for_iscsi_b_vnic                            : 3020
-allowed_vlans_for_iscsi_b_vnic                          : "3020,3040"
 
 # LAN Connectivity Policy
 # 4 interfaces for all hosts. 2 additional interfaces for iSCSI boot from SAN
@@ -236,15 +218,15 @@ fc_boot_order_policy_name         : "{{ prefix }}-FC-{{ vic_type }}-VIC-{{ vic_s
 name_of_fc_network_policy_san_a         : "{{ prefix}}-FC-Network-SAN-A"
 #fcoe_vlan_id_SAN_A                      : "{{ vsan_list[0].fcoe_vlan }}"
 #vsan_id_SAN_A                           : "{{ vsan_list[0].vsan_id }}"
-fcoe_vlan_id_SAN_A                      : 101
-vsan_id_SAN_A                           : 101
+#fcoe_vlan_id_SAN_A                      : 101
+#vsan_id_SAN_A                           : 101
 
 # Fibre Channel Network Policy: SAN-B
 name_of_fc_network_policy_san_b         : "{{ prefix}}-FC-Network-SAN-B"
 #fcoe_vlan_id_SAN_B                      : "{{ vsan_list[1].fcoe_vlan }}"
 #vsan_id_SAN_B                           : "{{ vsan_list[1].vsan_id }}"
-fcoe_vlan_id_SAN_B                      : 102
-vsan_id_SAN_B                           : 102
+#fcoe_vlan_id_SAN_B                      : 102
+#vsan_id_SAN_B                           : 102
 
 # Provide logical names to identify during boot
 san_boot_device_1a_name      : "fcp-lif-01a"

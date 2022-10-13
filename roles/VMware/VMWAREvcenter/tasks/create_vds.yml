@@ -35,4 +35,4 @@
       discovery_protocol: '{{ dv_protocol }}'
       discovery_operation: '{{ dv_operation }}'
       state: present
-    when: (configure_iscsi is defined) and (configure_nvme_tcp is defined)
+    when: configure_iscsi == 'true'

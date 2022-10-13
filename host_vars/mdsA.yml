@@ -7,8 +7,8 @@
   port_channel_description: "AA02-6536-A"
 #
 #  VSAN number to use used for a the fabric being created
-  vsan_id: "{{ vsan_list[0].vsan_id }}"
-  vsan_name: "{{ vsan_list[0].name }}"
+  vsan_id: "{{ vsan_A_id }}"
+  vsan_name: "{{ vsan_A_name }}"
 #
 # The zone names and zoneset name used in the configuration
   zoneset_name: FlexPod-Fabric-A

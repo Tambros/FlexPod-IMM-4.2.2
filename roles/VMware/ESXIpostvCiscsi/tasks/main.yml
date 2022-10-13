@@ -2,4 +2,4 @@
 #
 # Migrate iSCSI-booted Hosts supporting NVMe-TCP to iSCSI-NVMe-TCP vDS and add VMkernel Ports
   - include_tasks: migrate_to_iscsi_nvme_vds.yml
-    when: (configure_iscsi is defined) and (configure_nvme_tcp is defined)
+    when: configure_iscsi == 'true'

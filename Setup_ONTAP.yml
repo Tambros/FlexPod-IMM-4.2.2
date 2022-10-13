@@ -24,6 +24,7 @@
   gather_facts: False
   vars_files:
     - vars/ontap_main.yml
+    - group_vars/all.yml
   connection: local
   roles:
   - { role: ONTAP/ontap_luns, tags: [ 'ontap_luns' ] }
@@ -37,6 +38,7 @@
   gather_facts: False
   vars_files:
     - vars/ontap_main.yml
+    - group_vars/all.yml
   connection: local
   roles:
   - { role: ONTAP/ontap_nvme, tags: [ 'ontap_nvme' ] }

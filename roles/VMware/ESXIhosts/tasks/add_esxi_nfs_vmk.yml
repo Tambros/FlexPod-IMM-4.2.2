@@ -16,4 +16,4 @@
         subnet_mask: '{{ nfs_mask }}'
       state: present
     delegate_to: localhost
-    when: configure_nfs is defined
+    when: configure_nfs == 'true'

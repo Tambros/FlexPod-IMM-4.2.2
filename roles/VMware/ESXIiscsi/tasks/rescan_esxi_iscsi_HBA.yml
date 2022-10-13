@@ -8,4 +8,4 @@
       esxi_hostname: '{{ inventory_hostname }}'
       refresh_storage: true
     delegate_to: localhost
-    when: configure_iscsi is defined
+    when: configure_iscsi == 'true'

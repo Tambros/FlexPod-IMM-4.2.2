@@ -22,8 +22,8 @@
          },
         Tags: [{Key: "configmode", Value: "ansible"},{Key: "prefix", Value: "{{ prefix }}"}],
         "VsanSettings": {
-            "DefaultVlanId": "{{ fcoe_vlan_id_SAN_A }}",
-            "Id": "{{ vsan_id_SAN_A }}"
+            "DefaultVlanId": "{{ vsan_A_fcoe_vlan }}",
+            "Id": "{{ vsan_A_id }}"
          }
        }
   register: fc_network_policy_san_a
@@ -52,8 +52,8 @@
          },
         Tags: [{Key: "configmode", Value: "ansible"},{Key: "prefix", Value: "{{ prefix }}"}] ,
         "VsanSettings": {
-            "DefaultVlanId": "{{ fcoe_vlan_id_SAN_B }}",
-            "Id": "{{ vsan_id_SAN_B }}"
+            "DefaultVlanId": "{{ vsan_B_fcoe_vlan }}",
+            "Id": "{{ vsan_B_id }}"
          }
        }
   register: fc_network_policy_san_b

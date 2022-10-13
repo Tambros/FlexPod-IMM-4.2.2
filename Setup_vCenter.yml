@@ -29,16 +29,16 @@
     - roles/VMware/ESXIiscsi/defaults/main.yml
   roles:
     - role: VMware/ESXIpostvC
-      when: configure_iscsi is defined
+      when: configure_iscsi == 'true' 
     - role: VMware/ESXIpostvCiscsi
-      when: configure_iscsi is defined
+      when: configure_iscsi == 'true'
 
 - hosts: esxi_fc
   gather_facts: no
   serial: 1
   roles:
     - role: VMware/ESXIpostvC
-      when: configure_fc is defined
+      when: configure_fc == 'true'
 
 ################################################################################
 #

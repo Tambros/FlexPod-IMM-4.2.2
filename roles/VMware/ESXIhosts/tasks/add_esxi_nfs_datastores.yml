@@ -23,7 +23,7 @@
     delegate_to: localhost
     with_items:
       - "{{ nfs_ds_lif_map }}"
-    when: configure_nfs is defined
+    when: configure_nfs == 'true'
 
 # Add swap datastore to ESXi host
   - name: Add swap datastore to ESXi host
@@ -41,7 +41,7 @@
     delegate_to: localhost
     with_items:
       - "{{ swap_ds_lif_map }}"
-    when: configure_nfs is defined
+    when: configure_nfs == 'true'
 
 # Add vCLS datastore to ESXi host
   - name: Add vCLS datastore to ESXi host
@@ -59,4 +59,4 @@
     delegate_to: localhost
     with_items:
       - "{{ vcls_ds_lif_map }}"
-    when: configure_nfs is defined
+    when: configure_nfs == 'true'

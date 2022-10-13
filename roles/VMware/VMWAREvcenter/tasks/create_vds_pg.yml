@@ -32,4 +32,4 @@
         active_uplinks: "{{ item.active_uplinks }}"
         standby_uplinks: "{{ item.standby_uplinks }}"
     with_list: "{{ iscsi_nvme_tcp_vds_vlan_list }}"
-    when: (configure_iscsi is defined) and (configure_nvme_tcp is defined)
+    when: configure_iscsi == 'true'

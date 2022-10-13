@@ -16,9 +16,9 @@
     - vars/ontap_main.yml
   roles:
     - role: VMware/ESXIiscsi
-      when: configure_iscsi is defined
+      when: configure_iscsi == 'true'
     - role: VMware/ESXIhosts
-      when: configure_iscsi is defined
+      when: configure_iscsi == 'true'
 
  
 
@@ -29,4 +29,4 @@
     - vars/ontap_main.yml
   roles:
     - role: VMware/ESXIhosts
-      when: configure_fc is defined
+      when: configure_fc == 'true'

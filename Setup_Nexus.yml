@@ -1,7 +1,5 @@
 ---
-# This Playbook uses three different roles to
-# 1) setup Nexus switches
-# 2) Setup UCS admin, equiment and LAN related tasks
+# This Playbook sets up both Nexus switches for Ethernet switching in FlexPod
 # After executing this playbook, LAN connectivity should be configured
 #
 - hosts: nexus

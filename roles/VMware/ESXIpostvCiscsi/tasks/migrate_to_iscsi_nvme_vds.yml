@@ -140,12 +140,14 @@
         subnet_mask: '{{ nvme_mask }}'
       state: present
     delegate_to: localhost
+    when: configure_nvme_tcp == 'true'
 
 # Add the NVMe-TCP tag to the NVMe-TCP-A VMkernel port
   - name: Add the NVMe-TCP tag to the NVMe-TCP-A VMkernel port
     command: esxcli network ip interface tag add -i vmk5 -t NVMeTCP
     args:
       warn: false
+    when: configure_nvme_tcp == 'true'
 
 # Add the NVMe-TCP-B VMKernel to {{ iscsi_nvme_tcp_dvs_name }}
   - name: Add  NVMe-TCP-B VMKernel to {{ iscsi_nvme_tcp_dvs_name }}
@@ -164,9 +166,11 @@
         subnet_mask: '{{ nvme_mask }}'
       state: present
     delegate_to: localhost
+    when: configure_nvme_tcp == 'true'
 
 # Add the NVMe-TCP tag to the NVMe-TCP-A VMkernel port
   - name: Add the NVMe-TCP tag to the NVMe-TCP-B VMkernel port
     command: esxcli network ip interface tag add -i vmk6 -t NVMeTCP
     args:
       warn: false
+    when: configure_nvme_tcp == 'true'

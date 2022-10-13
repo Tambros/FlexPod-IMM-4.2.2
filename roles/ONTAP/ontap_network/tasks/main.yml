@@ -15,7 +15,7 @@
     - "{{ib_mgmt_vlan_list}}"
   tags:
     - ontap_mgmt_broadcast_domain
-    
+   
 # Create iSCSI broadcast domain ports with Jumbo frames
 - name: Create iSCSI broadcast domain ports with Jumbo frames
   netapp.ontap.na_ontap_broadcast_domain:
@@ -71,7 +71,8 @@
   with_items:
     - "{{storage_vlan_list}}"
   when:
-    - "('iscsi' and 'nvme' in svm_specs.allowed_protocols)"
+    - "('iscsi' in svm_specs.allowed_protocols)"
+    - "('nvme' in svm_specs.allowed_protocols)"
     - item.storage_protocol == "NVMe"
   tags:
     - ontap_nvme_tcp_broadcast_domains
@@ -199,7 +200,8 @@
     - "{{ifgrp_name}}"
   failed_when: item.1.state != "present"
   when:
-    - "('iscsi' and 'nvme' in svm_specs.allowed_protocols)"
+    - "('iscsi' in svm_specs.allowed_protocols)"
+    - "('nvme' in svm_specs.allowed_protocols)"
     - item.1.storage_protocol == "NVMe"
   tags:
     - ontap_vlan_interface
@@ -280,7 +282,8 @@
     - "{{storage_vlan_list}}"
     - "{{ifgrp_name}}"
   when:
-    - "('iscsi' and 'nvme' in svm_specs.allowed_protocols)"
+    - "('iscsi' in svm_specs.allowed_protocols)"
+    - "('nvme' in svm_specs.allowed_protocols)"
     - item.1.storage_protocol == "NVMe"
   tags:
     - ontap_vlan_interface

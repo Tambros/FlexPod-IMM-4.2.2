@@ -11,7 +11,7 @@
       - '{{ iscsi_a_uplink }}'
       mtu: '{{ iscsi_mtu }}'
     delegate_to: localhost
-    when: configure_iscsi is defined
+    when: configure_iscsi == 'true'
 
   - name: Create iSCSI B vSwitch - assign uplink '{{ iscsi_b_uplink }}' and set MTU to '{{ iscsi_mtu }}'
     community.vmware.vmware_vswitch:
@@ -25,4 +25,4 @@
       - '{{ iscsi_b_uplink }}'
       mtu: "{{ iscsi_mtu }}"
     delegate_to: localhost
-    when: configure_iscsi is defined
+    when: configure_iscsi == 'true'

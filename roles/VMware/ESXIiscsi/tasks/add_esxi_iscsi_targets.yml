@@ -7,4 +7,4 @@
     args:
       warn: false
     with_list: '{{ iscsi_targets }}'
-    when: configure_iscsi is defined
+    when: configure_iscsi == 'true'

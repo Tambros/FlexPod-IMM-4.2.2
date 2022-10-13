@@ -29,7 +29,7 @@
       enabled: true
       log_path: "{{item.audit_log_path}}"
     https: true
-    validate_certs: false 
+    validate_certs: false
     wait_for_completion: true
   with_items:
     - "{{svm_specs}}"

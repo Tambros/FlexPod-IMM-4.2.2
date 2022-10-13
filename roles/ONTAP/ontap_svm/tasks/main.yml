@@ -8,12 +8,16 @@
   when: item.aggr_name is defined and item.aggr_name != None
   tags:
     - ontap_config_svm
+    - ontap_ls_mirror_volumes
+    - ontap_snapmirror_relationship
 
 # See the aggr list
 - name: See the aggr list
   debug: var=aggr_list
   tags:
     - ontap_config_svm
+    - ontap_ls_mirror_volumes
+    - ontap_snapmirror_relationship
 
 # Create the infrastructure SVM with required protocols
 - name: Create infrastructure SVM with specified protocols enabled
@@ -109,17 +113,11 @@
 
 # Create the SnapMirror relationship
 - name: Create the SnapMirror relationships
-  netapp.ontap.na_ontap_snapmirror:
+  netapp.ontap.na_ontap_command:
+    command: "['snapmirror', 'create', '-source-path', '{{ svm_specs.svm_name }}:{{ svm_specs.svm_root_vol }}', '-destination-path', '{{ svm_specs.svm_name }}:{{ item }}', '-type', 'LS', '-schedule', '{{ job_schedule.0.job_name }}']"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
-    state: present
-    source_volume: "{{svm_specs.svm_root_vol}}"
-    destination_volume: "{{item}}"
-    source_vserver: "{{svm_specs.svm_name}}"
-    destination_vserver: "{{svm_specs.svm_name}}"
-    relationship_type: load_sharing
-    schedule: "{{job_schedule.0.job_name}}"
     https: true
     validate_certs: false
   with_sequence: start=1 end="{{ total_aggr_count }}" format={{ svm_specs.svm_root_vol }}_m0%1x
@@ -128,17 +126,13 @@
 
 # Initialize the mirroring relationship
 - name: Initialize the mirroring relationship
-  netapp.ontap.na_ontap_snapmirror:
+  netapp.ontap.na_ontap_command:
+    command: "['snapmirror', 'initialize-ls-set', '-source-path', '{{ svm_specs.svm_name }}:{{ svm_specs.svm_root_vol }}']"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
-    state: present
-    source_path: "{{svm_specs.svm_name}}:{{svm_specs.svm_root_vol}}"
-    destination_path: "{{svm_specs.svm_name}}:{{item}}"
-    relationship_state: active
     https: true
     validate_certs: false
-  with_sequence: start=1 end="{{ total_aggr_count }}" format={{ svm_specs.svm_root_vol }}_m0%1x
   tags:
     - ontap_snapmirror_relationship
 
@@ -233,7 +227,7 @@
     username: "{{username}}"
     password: "{{password}}"
     https: true
-    validate_certs: false 
+    validate_certs: false
   with_items:
     - "{{svm_specs}}"
   tags:

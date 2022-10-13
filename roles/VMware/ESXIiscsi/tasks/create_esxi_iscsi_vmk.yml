@@ -15,7 +15,7 @@
         subnet_mask: '{{ iscsi_mask }}'
       state: present
     delegate_to: localhost
-    when: configure_iscsi is defined
+    when: configure_iscsi == 'true'
 
   - name: Create iSCSI B adapter - ip address '{{ iscsi_b_ip }}' MTU '{{ iscsi_mtu }}'
     community.vmware.vmware_vmkernel:
@@ -33,4 +33,4 @@
         subnet_mask: '{{ iscsi_mask }}'
       state: present
     delegate_to: localhost
-    when: configure_iscsi is defined
+    when: configure_iscsi == 'true'
