@@ -156,7 +156,7 @@ svm_specs:
     - 10.102.1.152
   dns_domain_svm: "flexpodb4.cisco.com"
   svm_login_banner: The infra_svm is reserved for authorized users only!  #SVM Login banner Text message
-  audit_log_path: /audit_log  #Audit log destination path where consolidated audit logs will be stored. The path can be up to 864 characters in length and must have read-write permissions.
+  audit_log_volume_specs: {name: audit_log, size: 50, residing_aggr: aa02_a800_01_NVME_SSD_1}  #Audit log destination volume where consolidated audit logs will be stored
 
 ##################################################################################################################################################
 # Default/Best Practice related information - Change only if required
