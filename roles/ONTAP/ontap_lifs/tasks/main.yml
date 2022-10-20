@@ -88,7 +88,6 @@
     password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
-    role: data
     protocols: fcp
     home_node: "{{item.0.node_name}}"
     home_port: "{{item.1.home_port}}"
@@ -111,7 +110,6 @@
     password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
-    role: data
     protocols: fc-nvme
     home_node: "{{item.0.node_name}}"
     home_port: "{{item.1.home_port}}"
@@ -147,7 +145,7 @@
     nvme_tcp_vlans_list: "{{ nvme_tcp_vlans_list|default([]) + [ {'vlan_id': item.id, 'vlan_fabric': item.fabric} ] }}"
   with_items:
     - "{{storage_vlan_list}}"
-  when: 
+  when:
     - "('iscsi' in svm_specs.allowed_protocols)"
     - "('nvme' in svm_specs.allowed_protocols)"
     - item.storage_protocol == "NVMe"
@@ -159,7 +157,7 @@
   netapp.ontap.na_ontap_interface:
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
-    password: "{{password}}" 
+    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     service_policy: default-data-nvme-tcp
