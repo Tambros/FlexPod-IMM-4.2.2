@@ -41,8 +41,8 @@
 
 # Create the HA pairs count variable
 - name: Create the HA pairs count variable
-  set_fact:
-    ha_pairs_count: "{{ha_pairs_count | default([])}} + ['{{item}}']"
+  ansible.builtin.set_fact:
+    ha_pairs_count: "{{ ha_pairs_count | default([]) + [item] }}"
   with_items:
     - "{{ ha_pairs | map(attribute='ha_no') | flatten }}"
   tags:
