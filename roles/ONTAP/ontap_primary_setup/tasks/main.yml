@@ -28,7 +28,7 @@
 
 # Getting total number of port count across all nodes in the ONTAP Cluster
 - name: Get the total number of port count across all nodes in the ONTAP Cluster
-  set_fact:
+  ansible.builtin.set_fact:
     total_port_count: "{{ (total_port_count|default(0)|int + item.node_port_count|int)|int }}"
   with_items:
     - "{{ha_pairs}}"
@@ -38,7 +38,7 @@
 
 # See the total port count value
 - name: See the total port count value
-  debug: var=total_port_count|int*2
+  ansible.builtin.debug: var=total_port_count|int*2
   tags:
     - ontap_total_port_count
     - ontap_config_delete_broadcast_domain
@@ -115,8 +115,8 @@
 
 # Create the HA pairs count variable
 - name: Create the HA pairs count variable
-  set_fact:
-    ha_pairs_count: "{{ha_pairs_count | default([])}} + ['{{item}}']"
+  ansible.builtin.set_fact:
+    ha_pairs_count: "{{ ha_pairs_count | default([]) + [item] }}"
   with_items:
     - "{{ ha_pairs | map(attribute='ha_no') | flatten }}"
   tags:
@@ -155,7 +155,7 @@
   tags:
     - ontap_disable_flowcontrol
 
-- debug: msg="This task does not disable flow control on other ports that are currently not being setup for data access"
+- ansible.builtin.debug: msg="This task does not disable flow control on other ports that are currently not being setup for data access"
   tags:
     - ontap_disable_flowcontrol
 
@@ -189,8 +189,8 @@
 
 # Create the DNS server list variable
 - name: Create the DNS server list
-  set_fact:
-    dns_server_list: "{{dns_server_list | default([])}} + ['{{item.ip_address}}']"
+  ansible.builtin.set_fact:
+    dns_server_list: "{{ dns_server_list | default([]) + [item.ip_address] }}"
   with_items:
     - "{{dns_servers}}"
   when:
@@ -270,7 +270,7 @@
 
 # Getting the FCP port list with port speed and node name
 - name: Get the FCP port list with port speed and node name
-  set_fact:
+  ansible.builtin.set_fact:
     fcp_port_list: "{{ fcp_port_list|default([]) + [ {'node_name': item.1.node_name, 'fcp_ports': item.0.node_fcp_ports, 'fcp_port_speed': item.0.fcp_port_speed} ] }}"
   with_subelements:
     - "{{ ha_pairs }}"
