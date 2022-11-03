@@ -1,7 +1,7 @@
 ---
 # Getting the node-aggr-lif map list
 - name: Get the node-aggregate-lif map list
-  set_fact:
+  ansible.builtin.set_fact:
     node_aggr_lif_map: "{{ node_aggr_lif_map|default([]) + [ {'nfs_lif_ip': item.0.nfs_lifs.address, 'aggr_name': item.1.aggr_name} ] }}"
   with_subelements:
     - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
@@ -16,7 +16,7 @@
 
 # Getting the NFS datastore and NFS LIF map list
 - name: Get the NFS datastore and NFS LIF map list
-  set_fact:
+  ansible.builtin.set_fact:
     nfs_ds_lif_map: "{{ nfs_ds_lif_map|default([]) + [ {'datastore_name': item.1.name, 'nfs_lif_ip': item.0.nfs_lif_ip} ] }}"
   with_nested:
     - "{{ node_aggr_lif_map }}"
@@ -27,7 +27,7 @@
 
 # Getting the swap datastore and NFS LIF map list
 - name: Get the swap datastore and NFS LIF map list
-  set_fact:
+  ansible.builtin.set_fact:
     swap_ds_lif_map: "{{ swap_ds_lif_map|default([]) + [ {'datastore_name': item.1.name, 'nfs_lif_ip': item.0.nfs_lif_ip} ] }}"
   with_nested:
     - "{{ node_aggr_lif_map }}"
@@ -38,7 +38,7 @@
 
 # Getting the vCLS datastore and NFS LIF map list
 - name: Get the vCLS datastore and NFS LIF map list
-  set_fact:
+  ansible.builtin.set_fact:
     vcls_ds_lif_map: "{{ vcls_ds_lif_map|default([]) + [ {'datastore_name': item.1.name, 'nfs_lif_ip': item.0.nfs_lif_ip} ] }}"
   with_nested:
     - "{{ node_aggr_lif_map }}"
