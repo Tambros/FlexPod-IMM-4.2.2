@@ -63,7 +63,7 @@
 
 # Getting the FCP igroup names with their corresponding WWPNs
 - name: Get the FCP igroup names with their corresponding WWPNs
-  set_fact:
+  ansible.builtin.set_fact:
     fcp_igroup_wwpn_list: "{{ fcp_igroup_wwpn_list|default([]) + [ {'igroup_name': item.hostname, 'wwpns': [item.fcp_a_wwpn,item.fcp_b_wwpn]} ] }}"
   with_items:
     - "{{fc_esxi_hosts}}"
