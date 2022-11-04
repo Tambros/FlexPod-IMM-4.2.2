@@ -21,8 +21,8 @@
 
 # Create the host NQNs list for FC-NVMe config
 - name: Create the host NQNs list for FC-NVMe config
-  set_fact:
-    fc_nvme_nqn: "{{fc_nvme_nqn | default([])}} + ['{{item.nvme_nqn}}']"
+  ansible.builtin.set_fact:
+    fc_nvme_nqn: "{{ fc_nvme_nqn | default([]) + [item.nvme_nqn] }}"
   with_items:
     - "{{ fc_esxi_hosts }}"
   when:
@@ -33,8 +33,8 @@
 
 # Create the host NQNs list for NVMe/TCP config
 - name: Create the host NQNs list for NVMe/TCP config
-  set_fact:
-    nvme_tcp_nqn: "{{nvme_tcp_nqn | default([])}} + ['{{item.nvme_nqn}}']"
+  ansible.builtin.set_fact:
+    nvme_tcp_nqn: "{{ nvme_tcp_nqn | default([]) + [item.nvme_nqn] }}"
   with_items:
     - "{{ iscsi_esxi_hosts }}"
   when:
@@ -46,7 +46,7 @@
 # Create the final host NQNs list to be added to the NVMe subsystem
 - name: Create the final host NQNs list to be added to the NVMe subsystem
   set_fact:
-    nvme_nqns: "{{ fc_nvme_nqn | default([]) }}  + {{ nvme_tcp_nqn | default([]) }}"
+    nvme_nqns: "{{ fc_nvme_nqn | default([]) + nvme_tcp_nqn | default([]) }}"
   when: "('nvme' in svm_specs.allowed_protocols)"
   tags:
     - ontap_create_nvme_subsystem
