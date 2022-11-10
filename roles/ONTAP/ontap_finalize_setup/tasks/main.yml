@@ -36,7 +36,7 @@
 
 # Waiting for configuration to update
 - name: Waiting for configuration to update
-  pause:
+  ansible.builtin.pause:
     seconds: 90
 
 # Create the HA pairs count variable
