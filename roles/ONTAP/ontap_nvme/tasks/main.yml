@@ -45,7 +45,7 @@
 
 # Create the final host NQNs list to be added to the NVMe subsystem
 - name: Create the final host NQNs list to be added to the NVMe subsystem
-  set_fact:
+  ansible.builtin.set_fact:
     nvme_nqns: "{{ fc_nvme_nqn | default([]) + nvme_tcp_nqn | default([]) }}"
   when: "('nvme' in svm_specs.allowed_protocols)"
   tags:
@@ -53,7 +53,7 @@
 
 # See the host NQNs list
 - name: See the host NQNs list
-  debug: var=nvme_nqns
+  ansible.builtin.debug: var=nvme_nqns
   when: "('nvme' in svm_specs.allowed_protocols)"
   tags:
     - ontap_create_nvme_subsystem
@@ -77,7 +77,7 @@
 
 # Getting the list of Namespace paths to be associated with the subsystem
 - name: Get the list of Namespace paths to be associated with the subsystem
-  set_fact:
+  ansible.builtin.set_fact:
     ns_paths_list: "{{ns_paths_list | default([])}} + ['/vol/{{item.residing_vol}}/{{item.name}}']"
   with_items:
     - "{{ svm_specs.nvme_namespaces }}"
