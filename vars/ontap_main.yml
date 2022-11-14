@@ -146,7 +146,7 @@ svm_specs:
   boot_luns_iscsi: {size: 128, residing_vol: esxi_boot}   #ESXi host names will be used for NetApp Boot LUNs and igroup names. These vars are placed under group_vars/all.yml file
   boot_luns_fcp: {size: 128, residing_vol: esxi_boot}
   nvme_subsystem: nvme_infra_hosts
-  nvme_namespaces:  #Mention the namespaces that you want to create and map to the subsystem
+  nvme_namespaces:  #Mention the namespace that you want to create and map to the subsystem
     - {name: nvme_namespace_01, size: 50, residing_vol: nvme_datastore}  #Use NVMe datastore as residing volume here. Enter size values in gb
   svm_mgmt_lif: {home_node: aa02-a800-01, address: 10.102.1.30, netmask: 255.255.255.0, gateway: 10.102.1.254, lif_name: svm-mgmt}
   vsadmin_password: NetApp!23
