@@ -36,10 +36,10 @@
 #      dev_type: initiator
 #
   fc_nvme_device_alias_list:
-    - device_name: "{{ svm_specs.svm_name }}-fc-nvme-lif-01a"
+    - device_name: "{{ svm_specs.svm_name }}-fc-nvme-lif-01b"
       pwwn: "{{ fc_nvme_lif_01b }}"
       dev_type: target
-    - device_name: "{{ svm_specs.svm_name }}-fc-nvme-lif-02a"
+    - device_name: "{{ svm_specs.svm_name }}-fc-nvme-lif-02b"
       pwwn: "{{ fc_nvme_lif_02b }}"
       dev_type: target
   # Server Initiators are put in here. The number should match the number for fc_esxi_hosts in

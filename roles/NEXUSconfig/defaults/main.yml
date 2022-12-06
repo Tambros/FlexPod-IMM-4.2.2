@@ -36,40 +36,40 @@ peerlink_PC:
   - interface: "port-channel10"
     # id must be same as port-channel number
     id: "10"
-    speed: "100000"
-    duplex: "full"
+    speed: "auto"
+    duplex: "auto"
     description: "vPC Peer Link"
 #
 FI_A_PC:
   - interface: "port-channel197"
     # id must be same as port-channel number
     id: "197"
-    speed: "100000"
-    duplex: "full"
+    speed: "auto"
+    duplex: "auto"
     description: "AA02-6536-A"
 #
 FI_B_PC:
   - interface: "port-channel198"
     # id must be same as port-channel number
     id: "198"
-    speed: "100000"
-    duplex: "full"
+    speed: "auto"
+    duplex: "auto"
     description: "AA02-6536-B"
 #
 storage_A_PC:
   - interface: "port-channel199"
     # id must be same as port-channel number
     id: "199"
-    speed: "100000"
-    duplex: "full"
+    speed: "auto"
+    duplex: "auto"
     description: "AA02-A800-01"
 #
 storage_B_PC:
   - interface: "port-channel1100"
     # id must be same as port-channel number
     id: "1100"
-    speed: "100000"
-    duplex: "full"
+    speed: "auto"
+    duplex: "auto"
     description: "AA02-A800-02"
 #
 all_port_channels: "{{ peerlink_PC + uplink_PC + FI_A_PC + FI_B_PC + storage_A_PC + storage_B_PC }}"

@@ -42,24 +42,24 @@ time_zone: 'America/New_York'
 
 fc_esxi_hosts:
   - hostname: "aa02-esxi-1"
-    fcp_a_wwpn: "20:00:00:25:b5:a2:0a:00"
-    fcp_b_wwpn: "20:00:00:25:b5:a2:0b:00"
-    fc_nvme_a_wwpn: "20:00:00:25:b5:a2:0a:01"
-    fc_nvme_b_wwpn: "20:00:00:25:b5:a2:0b:01"
+    fcp_a_wwpn: "20:00:00:25:b5:a2:0a:01"
+    fcp_b_wwpn: "20:00:00:25:b5:a2:0b:01"
+    fc_nvme_a_wwpn: "20:00:00:25:b5:a2:0a:00"
+    fc_nvme_b_wwpn: "20:00:00:25:b5:a2:0b:00"
     nvme_nqn: "nqn.2014-08.com.cisco.flexpodb4:nvme:aa02-esxi-1"
   - hostname: "aa02-esxi-3"
-    fcp_a_wwpn: "20:00:00:25:b5:a2:0a:03"
-    fcp_b_wwpn: "20:00:00:25:b5:a2:0b:03"
-    fc_nvme_a_wwpn: "20:00:00:25:b5:a2:0a:02"
-    fc_nvme_b_wwpn: "20:00:00:25:b5:a2:0b:02"
-    nvme_nqn: "nqn.2014-08.com.cisco.flexpodb4:nvme:aa02-esxi-2"
+    fcp_a_wwpn: "20:00:00:25:b5:a2:0a:02"
+    fcp_b_wwpn: "20:00:00:25:b5:a2:0b:02"
+    fc_nvme_a_wwpn: "20:00:00:25:b5:a2:0a:03"
+    fc_nvme_b_wwpn: "20:00:00:25:b5:a2:0b:03"
+    nvme_nqn: "nqn.2014-08.com.cisco.flexpodb4:nvme:aa02-esxi-3"
 
 iscsi_esxi_hosts:
   - hostname: "aa02-esxi-2"
-    iscsi_iqn: "iqn.2010-11.com.flexpod:aa02-ucshost:1"
-    nvme_nqn: "nqn.2014-08.com.cisco.flexpodb4:nvme:aa02-esxi-3"
-  - hostname: "aa02-esxi-4"
     iscsi_iqn: "iqn.2010-11.com.flexpod:aa02-ucshost:2"
+    nvme_nqn: "nqn.2014-08.com.cisco.flexpodb4:nvme:aa02-esxi-2"
+  - hostname: "aa02-esxi-4"
+    iscsi_iqn: "iqn.2010-11.com.flexpod:aa02-ucshost:1"
     nvme_nqn: "nqn.2014-08.com.cisco.flexpodb4:nvme:aa02-esxi-4"
 
 # Storage SAN Identifiers
@@ -87,7 +87,7 @@ iscsi_lif_02b: '192.168.20.32'
 #
 # Storage iSCSI Target IQN
 #
-storage_iscsi_IQN: 'iqn.1992-08.com.netapp:sn.5d14fd944afd11ed837800a098e217cb:vs.3'
+storage_iscsi_IQN: 'iqn.1992-08.com.netapp:sn.90e9cb71515311ed978d00a098e217cb:vs.3'
 #
 # This is the list of all the VLANs that will be defined on Nexus, Storage, UCS, and VMware
 # VLAN Names are adjustable and can be modified in here

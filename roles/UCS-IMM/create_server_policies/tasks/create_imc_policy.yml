@@ -16,7 +16,7 @@
     api_body: {
         "Name": "{{ name_of_imc_access_policy }}",
         "Description": "{{ description_of_imc_access_policy }}",
-        "InbandVlan": "{{ oob_vlan_id }}",
+        "InbandVlan": "{{ ib_vlan_id }}",
         "InbandIpPool": "{{ management_ip_pool_details.api_response.Moid }}",
         "AddressType": {
            "EnableIpV4": true,

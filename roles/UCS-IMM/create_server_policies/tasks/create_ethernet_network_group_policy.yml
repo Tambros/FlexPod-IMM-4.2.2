@@ -52,7 +52,7 @@
        },
       Tags: [{Key: "configmode", Value: "ansible"},{Key: "prefix", Value: "{{ prefix }}"}],
       "VlanSettings": {
-         "NativeVlan": 1,
+         "NativeVlan": "{{ native_vlan_id }}",
          "AllowedVlans": "{{ vm_vlan_id }},{{ vmotion_vlan_id }},{{ nfs_vlan_id }}"
          }
       }
