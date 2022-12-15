@@ -82,7 +82,7 @@
       Tags: [{Key: "configmode", Value: "ansible"},{Key: "prefix", Value: "{{ prefix }}"}],
       "VlanSettings": {
          "NativeVlan": "{{ iscsiA_vlan_id }}",
-         "AllowedVlans": "{{ iscsiA_vlan_id }}"
+         "AllowedVlans": "{{ iscsiA_vlan_id|int }}"
          }
       }
   register: iscsi_a_network_group_policy
@@ -115,7 +115,7 @@
          "AllowedVlans": "{{ iscsiA_vlan_id }},{{ nvme_tcpA_vlan_id }}"
          }
       }
-  register: iscsi_a_network_group_policy
+  register: iscsi_nvme_a_network_group_policy
   when: (configure_iscsi == 'true') and (configure_nvme_tcp == 'true')
 
 - name: "Configure Ethernet Network Group Policy for iSCSI-B"
@@ -142,7 +142,7 @@
       Tags: [{Key: "configmode", Value: "ansible"},{Key: "prefix", Value: "{{ prefix }}"}],
       "VlanSettings": {
          "NativeVlan": "{{ iscsiB_vlan_id }}",
-         "AllowedVlans": "{{ iscsiB_vlan_id }}"
+         "AllowedVlans": "{{ iscsiB_vlan_id|int }}"
          }
       }
   register: iscsi_b_network_group_policy
@@ -175,5 +175,5 @@
          "AllowedVlans": "{{ iscsiB_vlan_id }},{{ nvme_tcpB_vlan_id }}"
          }
       }
-  register: iscsi_b_network_group_policy
+  register: iscsi_nvme_b_network_group_policy
   when: (configure_iscsi == 'true') and (configure_nvme_tcp == 'true')

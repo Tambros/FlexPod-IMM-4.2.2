@@ -27,4 +27,4 @@
                   devtype: "{{ item.dev_type }}"
               name: "{{  fc_nvme_zone_name  }}"
     with_list: "{{ fc_nvme_device_alias_list }}"
-    when: configure_fc_nvme is defined
+    when: configure_fc_nvme == 'true'

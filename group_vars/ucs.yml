@@ -3,7 +3,7 @@
 # 
 # Enter Intersight API Key ID and the location of the SecretKey file
 # 
-api_key_id        : 62ec44e57564612d3350faa1/62ec44e57564612d3350faa5/62ed90c77564612d328d1b17
+api_key_id        : 62ec44e57564612d3350faa1/62ec44e57564612d3350faa5/6390d85e7564612d328416ad
 api_private_key   : SecretKey.txt
 # 
 # Prefix added to the pool/policy/profile configuration to eaisly identify items created by Ansible
