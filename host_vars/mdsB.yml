@@ -31,9 +31,9 @@
     - device_name: "FCP-{{ fc_esxi_hosts[1].hostname }}-B"
       pwwn: "{{ fc_esxi_hosts[1].fcp_b_wwpn }}"
       dev_type: initiator
-#    - device_name: "FCP-{{ fc_esxi_hosts[2].hostname }}-B"
-#      pwwn: "{{ fc_esxi_hosts[2].fcp_b_wwpn }}"
-#      dev_type: initiator
+    - device_name: "FCP-{{ fc_esxi_hosts[2].hostname }}-B"
+      pwwn: "{{ fc_esxi_hosts[2].fcp_b_wwpn }}"
+      dev_type: initiator
 #
   fc_nvme_device_alias_list:
     - device_name: "{{ svm_specs.svm_name }}-fc-nvme-lif-01b"
@@ -50,9 +50,9 @@
     - device_name: "FC-NVMe-{{ fc_esxi_hosts[1].hostname }}-B"
       pwwn: "{{ fc_esxi_hosts[1].fc_nvme_b_wwpn }}"
       dev_type: initiator
-#    - device_name: "FC-NVMe-{{ fc_esxi_hosts[2].hostname }}-B"
-#      pwwn: "{{ fc_esxi_hosts[2].fc_nvme_b_wwpn }}"
-#      dev_type: initiator
+    - device_name: "FC-NVMe-{{ fc_esxi_hosts[2].hostname }}-B"
+      pwwn: "{{ fc_esxi_hosts[2].fc_nvme_b_wwpn }}"
+      dev_type: initiator
 #
 # MDS Switch FC Interface List
 #

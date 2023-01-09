@@ -89,14 +89,14 @@ ha_pairs:
         - {name: fcp-lif-01a, home_port: 2a, fabric: A}  #Do not change the fabric ID
         - {name: fcp-lif-01b, home_port: 2b, fabric: B}  #Do not change the fabric ID
       fc-nvme_lifs:    #Fill out this value only if fcp and nvme will be mentioned under allowed_protocols in svm_specs
-        - {name: fc-nvme-lif-01a, home_port: 2c, fabric: A}  #Do not change the fabric ID
-        - {name: fc-nvme-lif-01b, home_port: 2d, fabric: B}  #Do not change the fabric ID
+        - {name: fc-nvme-lif-01a, home_port: 2a, fabric: A}  #Do not change the fabric ID
+        - {name: fc-nvme-lif-01b, home_port: 2b, fabric: B}  #Do not change the fabric ID
       iscsi_lifs:  #Fill out this value only if iscsi will be mentioned under allowed_protocols in svm_specs. Provide one iSCSI LIF per iSCSI VLAN
         - {name: iscsi-lif-01a, address: 192.168.10.31, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
         - {name: iscsi-lif-01b, address: 192.168.20.31, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
       nvme_tcp_lifs:  #Fill out this value only if iscsi and nvme will be mentioned under allowed_protocols in svm_specs. Provide one NVMe/TCP LIF per NVMe/TCP VLAN
-        - {name: nvme-tcp-01a, address: 192.168.30.31, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
-        - {name: nvme-tcp-01b, address: 192.168.40.31, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
+        - {name: nvme-tcp-lif-01a, address: 192.168.30.31, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
+        - {name: nvme-tcp-lif-01b, address: 192.168.40.31, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
     - node_name: aa02-a800-02
       sp: {ip: 10.102.0.29, mask: 255.255.255.0, gateway: 10.102.0.254}
       node_mgmt_ip: 10.102.0.32
@@ -108,14 +108,14 @@ ha_pairs:
         - {name: fcp-lif-02a, home_port: 2a, fabric: A}  #Do not change the fabric ID
         - {name: fcp-lif-02b, home_port: 2b, fabric: B}  #Do not change the fabric ID
       fc-nvme_lifs:    #Fill out this value only if fcp and nvme will be mentioned under allowed_protocols in svm_specs
-        - {name: fc-nvme-lif-02a, home_port: 2c, fabric: A}  #Do not change the fabric ID
-        - {name: fc-nvme-lif-02b, home_port: 2d, fabric: B}  #Do not change the fabric ID
+        - {name: fc-nvme-lif-02a, home_port: 2a, fabric: A}  #Do not change the fabric ID
+        - {name: fc-nvme-lif-02b, home_port: 2b, fabric: B}  #Do not change the fabric ID
       iscsi_lifs:  #Fill out this value only if iscsi will be mentioned under allowed_protocols in svm_specs. Provide one iSCSI LIF per iSCSI VLAN
         - {name: iscsi-lif-02a, address: 192.168.10.32, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
         - {name: iscsi-lif-02b, address: 192.168.20.32, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
       nvme_tcp_lifs:  #Fill out this value only if iscsi and nvme will be mentioned under allowed_protocols in svm_specs. Provide one NVMe/TCP LIF per NVMe/TCP VLAN
-        - {name: nvme-tcp-02a, address: 192.168.30.32, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
-        - {name: nvme-tcp-02b, address: 192.168.40.32, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
+        - {name: nvme-tcp-lif-02a, address: 192.168.30.32, netmask: 255.255.255.0, fabric: A}  #Do not change the fabric ID
+        - {name: nvme-tcp-lif-02b, address: 192.168.40.32, netmask: 255.255.255.0, fabric: B}  #Do not change the fabric ID
 
 ##################################################################################################################################################
 #SVM specific variables
@@ -147,14 +147,14 @@ svm_specs:
   boot_luns_fcp: {size: 128, residing_vol: esxi_boot}
   nvme_subsystem: nvme_infra_hosts
   nvme_namespaces:  #Mention the namespaces that you want to create and map to the subsystem
-    - {name: nvme_namespace_01, size: 50, residing_vol: nvme_datastore}  #Use NVMe datastore as residing volume here. Enter size values in gb
+    - {name: nvme_namespace_01, size: 500, residing_vol: nvme_datastore}  #Use NVMe datastore as residing volume here. Enter size values in gb
   svm_mgmt_lif: {home_node: aa02-a800-01, address: 10.102.1.30, netmask: 255.255.255.0, gateway: 10.102.1.254, lif_name: svm-mgmt}
-  vsadmin_password: NetApp!23
+  vsadmin_password: H1ghV0lt
   os_type: vmware
   dns_server_svm:
-    - 10.102.1.151
-    - 10.102.1.152
-  dns_domain_svm: "flexpodb4.cisco.com"
+    - "{{ dns_servers[0].ip_address }}"
+    - "{{ dns_servers[1].ip_address }}"
+  dns_domain_svm: "{{ dns_domain_name }}"
   svm_login_banner: The infra_svm is reserved for authorized users only!  #SVM Login banner Text message
   audit_log_volume_specs: {name: audit_log, size: 50, residing_aggr: aa02_a800_01_NVME_SSD_1}  #Audit log destination volume where consolidated audit logs will be stored
 

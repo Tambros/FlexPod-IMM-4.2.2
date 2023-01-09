@@ -35,12 +35,6 @@
     - device_name: "FCP-{{ fc_esxi_hosts[2].hostname }}-A"
       pwwn: "{{ fc_esxi_hosts[2].fcp_a_wwpn }}"
       dev_type: initiator
-    - device_name: "FCP-{{ fc_esxi_hosts[3].hostname }}-A"
-      pwwn: "{{ fc_esxi_hosts[3].fcp_a_wwpn }}"
-      dev_type: initiator
-    - device_name: "FCP-{{ fc_esxi_hosts[4].hostname }}-A"
-      pwwn: "{{ fc_esxi_hosts[4].fcp_a_wwpn }}"
-      dev_type: initiator
 #
   fc_nvme_device_alias_list:
     - device_name: "{{ svm_specs.svm_name }}-fc-nvme-lif-01a"
@@ -59,12 +53,6 @@
       dev_type: initiator
     - device_name: "FC-NVMe-{{ fc_esxi_hosts[2].hostname }}-A"
       pwwn: "{{ fc_esxi_hosts[2].fc_nvme_a_wwpn }}"
-      dev_type: initiator
-    - device_name: "FC-NVMe-{{ fc_esxi_hosts[3].hostname }}-A"
-      pwwn: "{{ fc_esxi_hosts[3].fc_nvme_a_wwpn }}"
-      dev_type: initiator
-    - device_name: "FC-NVMe-{{ fc_esxi_hosts[4].hostname }}-A"
-      pwwn: "{{ fc_esxi_hosts[4].fc_nvme_a_wwpn }}"
       dev_type: initiator
 #
 # Nexus Switch Interface List
