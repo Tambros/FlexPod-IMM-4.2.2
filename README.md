@@ -6,7 +6,7 @@ This repository for FlexPod contains Ansible playbooks to configure Cisco Nexus,
 
 The CVD lays out the complete process for configuring the FlexPod using Ansible. Since these playbooks are intended to save time in setting up a working FlexPod, a complete FlexPod as shown below is needed to execute the playbooks. Various simulators could be used to partially test individual playbooks.
 
-![Block![block-diagram](https://github.com/ucs-compute-solutions/FlexPod-IMM-4.2.2/blob/master/ReadmePics/Main-Topology.jpg)  
+![block-diagram](https://github.com/ucs-compute-solutions/FlexPod-IMM-4.2.2/blob/master/ReadmePics/Main-Topology.jpg)  
 
 # Set up the execution environment
 
