@@ -18,36 +18,16 @@ cluster_mgmt_interface: cluster_mgmt
 
 #List the ONTAP Licenses for the different features that you need
 ontap_license:
-  - WGIYDYLHSOVOGDKGPBCAAAAAAAAA
-  - ERVGKUFRYVHXCFKGPBCAAAAAAAAA
-  - QLTVKUFRYVHXCFKGPBCAAAAAAAAA
-  - IBGNEYLHSOVOGDKGPBCAAAAAAAAA
-  - UVDCFYLHSOVOGDKGPBCAAAAAAAAA
-  - CGRKLUFRYVHXCFKGPBCAAAAAAAAA
-  - OAPZLUFRYVHXCFKGPBCAAAAAAAAA
-  - GQBRFYLHSOVOGDKGPBCAAAAAAAAA
-  - QZUJHYLHSOVOGDKGPBCAAAAAAAAA
-  - YJISNUFRYVHXCFKGPBCAAAAAAAAA
-  - MPKDNUFRYVHXCFKGPBCAAAAAAAAA
-  - EFXUGYLHSOVOGDKGPBCAAAAAAAAA
-  - OOQNIYLHSOVOGDKGPBCAAAAAAAAA
-  - WYDWOUFRYVHXCFKGPBCAAAAAAAAA
-  - CUSYHYLHSOVOGDKGPBCAAAAAAAAA
-  - KEGHOUFRYVHXCFKGPBCAAAAAAAAA
-  - UNZZPUFRYVHXCFKGPBCAAAAAAAAA
-  - MDMRJYLHSOVOGDKGPBCAAAAAAAAA
-  - QFSVOYLHSOVOGDKGPBCAAAAAAAAA
-  - YPFEVUFRYVHXCFKGPBCAAAAAAAAA
-  - MVHPUUFRYVHXCFKGPBCAAAAAAAAA
-  - ELUGOYLHSOVOGDKGPBCAAAAAAAAA
+  - <license 1 code>
+  - <license 2 code>
 
 #Details for configuring NetApp AutoSupport
 autosupport_vars:
   mail_hosts: 10.102.1.150
-  noteto: "jogeorg2.com"
+  noteto: "email-address"
   proxy_url: #Optional: If authentication is used, use format: "username:password@host:port"
   from_address: "ontap_cluster@netapp.com"
-  to_addresses: "jogeorg2@cisco.com"
+  to_addresses: "email-address"
 
 #SNMP related variables
 enable_snmp: false
@@ -55,7 +35,7 @@ enable_snmp: false
 snmp_contact: "jogeorg2@cisco.com"
 snmp_location: "Cisco RTP, Building 4, Lab 141, AA02"
 traphost_ip: "10.102.1.95"
-snmp_community: "FlexPod"
+snmp_community: "public"
 
 #SNMPv3 related variables
 user: snmpv3_user   #The name of the user to manage
@@ -126,7 +106,7 @@ svm_specs:
   svm_root_vol: Infra_SVM_root
   allowed_protocols:  #provide the values in lower case only, supported options for this solution are nfs, fcp, iscsi, nvme
     - nfs             #For FC-NVMe config, use fcp and nvme
-    - fcp             #For NVMe/TCP config, use nvme and iscsi
+#    - fcp             #For NVMe/TCP config, use nvme and iscsi
     - nvme
     - iscsi
   client_match: 192.168.50.0/24
@@ -149,7 +129,7 @@ svm_specs:
   nvme_namespaces:  #Mention the namespaces that you want to create and map to the subsystem
     - {name: nvme_namespace_01, size: 500, residing_vol: nvme_datastore}  #Use NVMe datastore as residing volume here. Enter size values in gb
   svm_mgmt_lif: {home_node: aa02-a800-01, address: 10.102.1.30, netmask: 255.255.255.0, gateway: 10.102.1.254, lif_name: svm-mgmt}
-  vsadmin_password: H1ghV0lt
+  vsadmin_password: <password>
   os_type: vmware
   dns_server_svm:
     - "{{ dns_servers[0].ip_address }}"
