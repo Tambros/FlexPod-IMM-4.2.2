@@ -43,14 +43,14 @@ The steps for setting up a FlexPod with iSCSI boot with NVMe-TCP and NFS storage
 14.  If configurating Fibre Channel, follow the manual steps in the CVD to set up the MDS switches on the network and ssh into each switch.
 15.  If configurating Fibre Channel, execute the MDS playbook with "ansible-playbook ./Setup_MDS.yml -i inventory".
 16.  If configurating Fibre Channel, follow the manual steps in the CVD to add timezone information to the MDS switches.
-17.  Add the ESXi host IQNs to "vars/ontap.yml"
+17.  Add the ESXi host IQNs to "vars/ontap_main.yml"
 18.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_2" to create and map the ESXi boot LUNs.
 19.  Follow the manual steps in the CVD to install VMware ESXi on the three (or more) host servers and assign IPs to those servers.
 20.  Execute the ESXi playbook with "ansible-playbook ./Setup_ESXi.yml -i inventory" to setup the ESXi hosts.
 21.  Bring a vCenter into the environment by either installing vCenter on the first ESXi host according to the CVD, copying it in, or establishing L3 routing to it.
 22.  Setup the vCenter and add the three ESXi hosts to it by executing "ansible-playbook ./Setup_vCenter.yml -i inventory".
 23.  Follow the manual steps in the CVD to complete setting up vCenter and the ESXi hosts.
-24.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_3" to setup NVMe-TCP.
+24.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_3" to setup NVMe-TCP and finalize ONTAP Storage.
 25.  Execute the manual steps in the CVD to complete the NVMe-TCP setup.
 26.  Execute the NetApp ONTAP tools playbook with "ansible-playbook -i inventory Setup_ONTAP_tools.yml" to install the ONTAP Tools VM.
 27.  Execute the NetApp SnapCenter Plug-in 4.7 playbook with "ansible-playbook -i hosts Setup_SnapCenter_VMware_Plugin.yml" to intall the SnapCenter Plug-In.
