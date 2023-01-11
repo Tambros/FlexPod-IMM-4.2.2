@@ -51,9 +51,9 @@ The steps for setting up a FlexPod with iSCSI boot with NVMe-TCP and NFS storage
 22.  Follow the manual steps in the CVD to complete setting up vCenter and the ESXi hosts.
 23.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_3" to setup NVMe-TCP and finalize ONTAP Storage.
 24.  Execute the manual steps in the CVD to complete the NVMe-TCP setup.
-25.  Execute the NetApp ONTAP tools playbook with "ansible-playbook -i inventory Setup_ONTAP_tools.yml" to install the ONTAP Tools VM.
-26.  Execute the NetApp SnapCenter Plug-in 4.7 playbook with "ansible-playbook -i hosts Setup_SnapCenter_VMware_Plugin.yml" to intall the SnapCenter Plug-In.
-27.  Execute the NetApp AIQUM playbook with "ansible-playbook aiqum.yml -t aiqum_setup" to intall NetApp AIQUM.
+25.  Follow the steps in the CVD to install the ONTAP Tools VM via Ansible.
+26.  Follow the steps in the CVD to intsall the SnapCenter VMware Plug-In via Ansible.
+27.  Follow the steps in the CVD to install Active IQ Unified Manager via Ansible.
 28.  Follow the manual steps in the CVD to finish setting up ONTAP tools, the SnapCenter Plug-in, and AIQUM.
 29.  Follow the manual steps in the CVD to setup Cisco Intersight Assist and Cisco Data Center Network Manager (DCNM) 11.5(4).
 
