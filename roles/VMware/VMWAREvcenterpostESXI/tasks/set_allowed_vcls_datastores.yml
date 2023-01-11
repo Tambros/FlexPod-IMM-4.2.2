@@ -1,7 +1,7 @@
 ---
 # This task sets the allowed vCLS datastore on the FlexPod MGMT Cluster
 
-  - name: Import esxi_datastores role to get NFS and swap datastores related info
+  - name: Import esxi_datastores role to get vCLS datastores related info
     import_role:
       name: ONTAP/esxi_datastores
 
