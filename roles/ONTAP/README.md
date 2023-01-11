@@ -97,4 +97,4 @@ If you would like to run a part of the deployment, you may use the appropriate t
 
 ### Author
 
- * [Kamini Singh](kamini.singh@netapp.com)
+ * Kamini Singh (kamini.singh@netapp.com)
