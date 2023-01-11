@@ -14,7 +14,7 @@ The ONTAP deployment automation is based on the following roles:
 	ontap_finalize_setup
 	esxi_datastores
 
-These roles are developed as per the best practices prescribed in the Cisco Validated Design (CVD) "[FlexPod Datacenter with End-to-End 100G, Cisco Intersight Managed Mode, VMware 7U3, and NetApp ONTAP 9.11]".
+These roles are developed as per the best practices prescribed in the Cisco Validated Design (CVD) "[FlexPod Datacenter with End-to-End 100G, Cisco Intersight Managed Mode, VMware 7U3, and NetApp ONTAP 9.11](https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/UCS_CVDs/flexpod_ucs_xseries_e2e_ontap_manual_deploy.html)".
 
 ### Environment Validated
 
