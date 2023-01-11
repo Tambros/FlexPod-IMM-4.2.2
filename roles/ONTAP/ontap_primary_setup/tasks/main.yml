@@ -33,14 +33,12 @@
   with_items:
     - "{{ha_pairs}}"
   tags:
-    - ontap_total_port_count
     - ontap_config_delete_broadcast_domain
 
 # See the total port count value
 - name: See the total port count value
   ansible.builtin.debug: var=total_port_count|int*2
   tags:
-    - ontap_total_port_count
     - ontap_config_delete_broadcast_domain
 
 # Delete the Default broadcast domains with node ports (This does not include Cluster ports and management ports)
@@ -120,7 +118,6 @@
   with_items:
     - "{{ ha_pairs | map(attribute='ha_no') | flatten }}"
   tags:
-    - ontap_ha_pairs_count
     - ontap_check_cluster_ha
 
 # Ensure the cluster HA status. Only enable HA mode for two-node clusters
@@ -276,7 +273,6 @@
     - "{{ ha_pairs }}"
     - node_specs
   tags:
-    - fcp_port_list
     - ontap_fc_adapters
 
 # Disable Auto-Negotiate on Fibre Channel Ports
