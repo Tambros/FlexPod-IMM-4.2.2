@@ -1,6 +1,6 @@
-### Automated ONTAP storage deployment using Ansible for FlexPod Datacenter with Cisco UCS 4.2(2) in Intersight Managed Mode, VMware vSphere 7.0 U3, and NetApp ONTAP 9.11.1
+### Automated ONTAP storage deployment using Ansible for End-to-End 100G FlexPod Datacenter with Cisco UCS 4.2(2) in Intersight Managed Mode, VMware vSphere 7.0 U3, and NetApp ONTAP 9.11.1
  
-This repository contains Ansible roles and playbooks for an end-to-end ONTAP storage deployment for VMware vSphere 7.0 U2 in a FlexPod Datacenter.
+This repository contains Ansible roles and playbooks for an end-to-end ONTAP storage deployment for VMware vSphere 7.0 U3 in a FlexPod Datacenter.
 
 The ONTAP deployment automation is based on the following roles:
 
@@ -12,12 +12,9 @@ The ONTAP deployment automation is based on the following roles:
 	ontap_luns
 	ontap_nvme
 	ontap_finalize_setup
+	esxi_datastores
 
-The ONTAP Tools for VMware vSphere (previously VSC) deployment is based on the following role and is available in the 'roles' directory of this repository:
-
-	ontap_tools-config
-
-These roles are developed as per the best practices prescribed in the Cisco Validated Design (CVD) "FlexPod Datacenter with Cisco UCS M6, VMware 7.0 U2 and NetApp ONTAP 9.9".
+These roles are developed as per the best practices prescribed in the Cisco Validated Design (CVD) "[FlexPod Datacenter with End-to-End 100G, Cisco Intersight Managed Mode, VMware 7U3, and NetApp ONTAP 9.11]".
 
 ### Environment Validated
 
