@@ -35,28 +35,27 @@ The steps for setting up a FlexPod with iSCSI boot with NVMe-TCP and NFS storage
 7.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_1".
 8.  Query the Infra-SVM iSCSI IQN and add to the "all.yml" file.
 9.  Follow the manual steps in the CVD to create an Intersight Account, and get the Cisco UCS Fabric Interconnects (FIs) on the network in Intersight Managed Mode.
-10.  Claim the FIs to Intersight and setup and deploy the Domain Profile.
+10.  Claim the FIs into Intersight and setup and deploy the Domain Profile.
 11.  Execute the IMM playbooks with "ansible-playbook ./Create_IMM_Pools.yml", "ansible-playbook ./Create_IMM_Server_Policies.yml", and 
      "ansible-playbook ./Create_IMM_Server_Profile_Templates.yml" to setup the Cisco UCS Server Profile Templates, Policies, and Pools.
 12.  Follow the manual steps in the CVD to create UCS service profiles for three or more VMware ESXi management hosts.
 13.  Query the ESXi host IQNs and add to the "all.yml" file.
 14.  If configurating Fibre Channel, follow the manual steps in the CVD to set up the MDS switches on the network and ssh into each switch.
 15.  If configurating Fibre Channel, execute the MDS playbook with "ansible-playbook ./Setup_MDS.yml -i inventory".
-16.  If configurating Fibre Channel, follow the manual steps in the CVD to add timezone information to the MDS switches.
-17.  Add the ESXi host IQNs to "vars/ontap_main.yml"
-18.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_2" to create and map the ESXi boot LUNs.
-19.  Follow the manual steps in the CVD to install VMware ESXi on the three (or more) host servers and assign IPs to those servers.
-20.  Execute the ESXi playbook with "ansible-playbook ./Setup_ESXi.yml -i inventory" to setup the ESXi hosts.
-21.  Bring a vCenter into the environment by either installing vCenter on the first ESXi host according to the CVD, copying it in, or establishing L3 routing to it.
-22.  Setup the vCenter and add the three ESXi hosts to it by executing "ansible-playbook ./Setup_vCenter.yml -i inventory".
-23.  Follow the manual steps in the CVD to complete setting up vCenter and the ESXi hosts.
-24.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_3" to setup NVMe-TCP and finalize ONTAP Storage.
-25.  Execute the manual steps in the CVD to complete the NVMe-TCP setup.
-26.  Execute the NetApp ONTAP tools playbook with "ansible-playbook -i inventory Setup_ONTAP_tools.yml" to install the ONTAP Tools VM.
-27.  Execute the NetApp SnapCenter Plug-in 4.7 playbook with "ansible-playbook -i hosts Setup_SnapCenter_VMware_Plugin.yml" to intall the SnapCenter Plug-In.
-28.  Execute the NetApp AIQUM playbook with "ansible-playbook aiqum.yml -t aiqum_setup" to intall NetApp AIQUM.
-29.  Follow the manual steps in the CVD to finish setting up ONTAP tools, the SnapCenter Plug-in, and AIQUM.
-30.  Follow the manual steps in the CVD to setup Cisco Intersight Assist and Cisco Data Center Network Manager (DCNM) 11.5(4).
+16.  If configurating Fibre Channel, follow the manual steps in the CVD to add timezone information to the MDS switches. 
+17.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_2" to create and map the ESXi boot LUNs.
+18.  Follow the manual steps in the CVD to install VMware ESXi on the three (or more) host servers and assign IPs to those servers.
+19.  Execute the ESXi playbook with "ansible-playbook ./Setup_ESXi.yml -i inventory" to setup the ESXi hosts.
+20.  Bring a vCenter into the environment by either installing vCenter on the first ESXi host according to the CVD, copying it in, or establishing L3 routing to it.
+21.  Setup the vCenter and add the three ESXi hosts to it by executing "ansible-playbook ./Setup_vCenter.yml -i inventory".
+22.  Follow the manual steps in the CVD to complete setting up vCenter and the ESXi hosts.
+23.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_3" to setup NVMe-TCP and finalize ONTAP Storage.
+24.  Execute the manual steps in the CVD to complete the NVMe-TCP setup.
+25.  Execute the NetApp ONTAP tools playbook with "ansible-playbook -i inventory Setup_ONTAP_tools.yml" to install the ONTAP Tools VM.
+26.  Execute the NetApp SnapCenter Plug-in 4.7 playbook with "ansible-playbook -i hosts Setup_SnapCenter_VMware_Plugin.yml" to intall the SnapCenter Plug-In.
+27.  Execute the NetApp AIQUM playbook with "ansible-playbook aiqum.yml -t aiqum_setup" to intall NetApp AIQUM.
+28.  Follow the manual steps in the CVD to finish setting up ONTAP tools, the SnapCenter Plug-in, and AIQUM.
+29.  Follow the manual steps in the CVD to setup Cisco Intersight Assist and Cisco Data Center Network Manager (DCNM) 11.5(4).
 
 The Ansible playbooks and CVD are structured in a way that a Fibre Channel Boot, Fibre Channel Boot with FC-NVMe, iSCSI Boot or iSCSI Boot with NVMe-TCP FlexPod configuration can be setup by adjusting the variables. Also, the playbooks can be used to setup the following topology utilizing Cisco Nexus switches that support SAN Switching (93180YC-FX, 93360YC-FX2, or 9336C-FX2-E) for both LAN and SAN switching and 100G FCoE Uplinks from the FIs to the switches.
 
