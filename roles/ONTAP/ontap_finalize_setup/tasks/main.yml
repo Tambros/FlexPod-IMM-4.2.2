@@ -1,5 +1,5 @@
 ---
-# Configure DNS for infra_mgmt
+# Configure DNS for infrastructure SVM
 - name: Configure DNS for infrastucture mgmt SVM
   netapp.ontap.na_ontap_dns:
     state: present
@@ -46,7 +46,6 @@
   with_items:
     - "{{ ha_pairs | map(attribute='ha_no') | flatten }}"
   tags:
-    - ontap_ha_pairs_count
     - ontap_config_delete_residual_broadcast_domain
 
 # Delete the residual Default broadcast domains with ifgroups. This behaviour is observed in 2-node cluster
