@@ -1,4 +1,4 @@
-### Automated ONTAP storage deployment using Ansible for FlexPod Datacenter with Cisco UCS 4.2(2) in Intersight Managed Mode, VMware vSphere 7.0 U3, and NetApp ONTAP 9.11.1
+### Automated ONTAP storage deployment using Ansible for FlexPod Datacenter with Cisco UCS 4.2(2) in Intersight Managed Mode, VMware vSphere 7.0 U3, and NetApp ONTAP ### 9.11.1
  
 This repository contains Ansible roles and playbooks for an end-to-end ONTAP storage deployment for VMware vSphere 7.0 U2 in a FlexPod Datacenter.
 
