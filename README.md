@@ -38,8 +38,8 @@ The steps for setting up a FlexPod with iSCSI boot with NVMe-TCP and NFS storage
 10.  Claim the FIs into Intersight and setup and deploy the Domain Profile.
 11.  Execute the IMM playbooks with "ansible-playbook ./Create_IMM_Pools.yml", "ansible-playbook ./Create_IMM_Server_Policies.yml", and 
      "ansible-playbook ./Create_IMM_Server_Profile_Templates.yml" to setup the Cisco UCS Server Profile Templates, Policies, and Pools.
-12.  Follow the manual steps in the CVD to create UCS service profiles for three or more VMware ESXi management hosts.
-13.  Query the ESXi host IQNs and add to the "all.yml" file.
+12.  Follow the manual steps in the CVD to create UCS IMM server profiles for three or more VMware ESXi management hosts.
+13.  Query the ESXi host IQNs or WWPNs from the server profiles and add to the "all.yml" file.
 14.  If configurating Fibre Channel, follow the manual steps in the CVD to set up the MDS switches on the network and ssh into each switch.
 15.  If configurating Fibre Channel, execute the MDS playbook with "ansible-playbook ./Setup_MDS.yml -i inventory".
 16.  If configurating Fibre Channel, follow the manual steps in the CVD to add timezone information to the MDS switches. 
@@ -47,7 +47,7 @@ The steps for setting up a FlexPod with iSCSI boot with NVMe-TCP and NFS storage
 18.  Follow the manual steps in the CVD to install VMware ESXi on the three (or more) host servers and assign IPs to those servers.
 19.  Execute the ESXi playbook with "ansible-playbook ./Setup_ESXi.yml -i inventory" to setup the ESXi hosts.
 20.  Bring a vCenter into the environment by either installing vCenter on the first ESXi host according to the CVD, copying it in, or establishing L3 routing to it.
-21.  Setup the vCenter and add the three ESXi hosts to it by executing "ansible-playbook ./Setup_vCenter.yml -i inventory".
+21.  Setup the vCenter and add the three or more ESXi hosts to it by executing "ansible-playbook ./Setup_vCenter.yml -i inventory".
 22.  Follow the manual steps in the CVD to complete setting up vCenter and the ESXi hosts.
 23.  Execute the NetApp storage playbook with "ansible-playbook -i inventory Setup_ONTAP.yml -t ontap_config_part_3" to setup NVMe-TCP and finalize ONTAP Storage.
 24.  Execute the manual steps in the CVD to complete the NVMe-TCP setup.
@@ -57,7 +57,7 @@ The steps for setting up a FlexPod with iSCSI boot with NVMe-TCP and NFS storage
 28.  Follow the manual steps in the CVD to finish setting up ONTAP tools, the SnapCenter Plug-in, and AIQUM.
 29.  Follow the manual steps in the CVD to setup Cisco Intersight Assist and Cisco Data Center Network Manager (DCNM) 11.5(4).
 
-The Ansible playbooks and CVD are structured in a way that a Fibre Channel Boot, Fibre Channel Boot with FC-NVMe, iSCSI Boot or iSCSI Boot with NVMe-TCP FlexPod configuration can be setup by adjusting the variables. Also, the playbooks can be used to setup the following topology utilizing Cisco Nexus switches that support SAN Switching (93180YC-FX, 93360YC-FX2, or 9336C-FX2-E) for both LAN and SAN switching and 100G FCoE Uplinks from the FIs to the switches.
+The Ansible playbooks and CVD are structured in a way that a Fibre Channel Boot, Fibre Channel Boot with FC-NVMe, iSCSI Boot or iSCSI Boot with NVMe-TCP FlexPod or combination configurations can be setup by adjusting the variables. Also, the playbooks can be used to setup the following topology utilizing Cisco Nexus switches that support SAN Switching (93180YC-FX, 93360YC-FX2, or 9336C-FX2-E) for both LAN and SAN switching and 100G FCoE Uplinks from the FIs to the switches.
 
 ![block-diagram](https://github.com/ucs-compute-solutions/FlexPod-IMM-4.2.2/blob/main/ReadmePics/NexusSAN-Topology.jpg)
 
