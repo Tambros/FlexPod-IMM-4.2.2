@@ -32,7 +32,7 @@ autosupport_vars:
 #SNMP related variables
 enable_snmp: false
 #Please make sure to fill out the below details if you have chosen to enable SNMP, leaving it empty will cause the setup to fail
-snmp_contact: "jogeorg2@cisco.com"
+snmp_contact: "email-address"
 snmp_location: "Cisco RTP, Building 4, Lab 141, AA02"
 traphost_ip: "10.102.1.95"
 snmp_community: "public"
