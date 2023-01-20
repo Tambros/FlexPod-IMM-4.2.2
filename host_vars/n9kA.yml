@@ -32,6 +32,6 @@ storage_A_interface_list:
 #
 storage_B_interface_list:
   - interface:  "Ethernet1/100"
-    description: "AA02-A800-02:e5b"
+    description: "AA02-A800-02:e5a"
 #
 all_interfaces: "{{ uplink_interface_list + peerlink_interface_list + FI_A_interface_list + FI_B_interface_list + storage_A_interface_list + storage_B_interface_list }}"
