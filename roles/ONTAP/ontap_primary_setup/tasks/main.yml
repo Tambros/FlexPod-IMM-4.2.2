@@ -79,12 +79,8 @@
 
 # Create data aggregates
 - name: Create the data aggregates
-  netapp.ontap.na_ontap_aggregate:
-    state: present
-    name: "{{item.1.aggr_name}}"
-    disk_count: "{{item.1.diskcount}}"
-    disk_type: "{{item.1.disk_type}}"
-    nodes: "{{item.0.node_name}}"
+  netapp.ontap.na_ontap_command:
+    command: ['storage', 'aggregate', 'create', '-aggregate', '{{item.1.aggr_name}}', '-node', '{{item.0.node_name}}', '-diskcount', '{{item.1.diskcount}}', '-disktype', '{{item.1.disk_type}}']
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
