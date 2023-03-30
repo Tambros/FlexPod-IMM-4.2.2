@@ -325,8 +325,8 @@
   tags:
     - ontap_config_autosupport
 
-# Add ONTAP Licenses
-- name: Add licenses
+# Add ONTAP Licenses using legacy keys
+- name: Add licenses using legacy keys
   netapp.ontap.na_ontap_license:
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
@@ -334,9 +334,27 @@
     state: present
     https: true
     validate_certs: false
-    license_codes: "{{ ontap_license }}"
+    license_codes: "{{ legacy_license_keys }}"
+  when: "('legacy' in ontap_license_key_format)"
   tags:
-    - ontap_license
+    - ontap_license_legacy
+
+# Add ONTAP Licenses using NetApp License File (NLF)
+- name: Add licenses using NLF
+  netapp.ontap.na_ontap_license:
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
+    https: true
+    validate_certs: false
+    state: present
+    license_codes:
+      - "{{ lookup('file', '{{item}}' ) | string }}"
+  with_items:
+    - "{{ nlf_filepath }}"
+  when: "('NLF' in ontap_license_key_format)"
+  tags:
+    - ontap_license_nlf
 
 # Configure SNMP
 - name: Configure SNMP contact
