@@ -16,10 +16,24 @@ cluster_location: "Cisco RTP, Building 4, Lab 141, AA02"
 #Cluster management LIF already exists (pre-requisite), so note down name of cluster management LIF and enter below.
 cluster_mgmt_interface: cluster_mgmt
 
-#List the ONTAP Licenses for the different features that you need
-ontap_license:
+#ONTAP Licensing Format
+#Note: ONTAP 9.10.1 and later for FAS/AFF storage systems uses a new file-based licensing solution known as NetApp License File, or NLF. Prior versions of ONTAP used 28-character keys called as legacy license keys.
+ontap_license_key_format:  #Options are "legacy" and "NLF"
+  - legacy
+  - NLF
+  
+#List the Legacy License Keys for the different features that you need
+legacy_license_keys:
   - <license 1 code>
   - <license 2 code>
+
+#Path to NetApp License File (NLF)
+nlf_filepath:
+  - "/root/license/EvalNLF-Core-license.txt"
+  - "/root/license/EvalNLF-data-license.txt"
+  - "/root/license/EvalNLF-encryption-license.txt"
+  - "/root/license/EvalNLF-hybrid-license.txt"
+  - "/root/license/EvalNLF-NVMe-license.txt"
 
 #Details for configuring NetApp AutoSupport
 autosupport_vars:
