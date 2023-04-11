@@ -98,12 +98,12 @@
 # Zero All Spare Disks
 - name: Zero all the spare disks
   netapp.ontap.na_ontap_command:
+    command: ['disk', 'zerospares']
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     https: true
     validate_certs: false
-    command: ['disk', 'zerospares']
   tags:
     - ontap_disk_zerospares
 
@@ -328,13 +328,13 @@
 # Add ONTAP Licenses using legacy keys
 - name: Add licenses using legacy keys
   netapp.ontap.na_ontap_license:
+    state: present
+    license_codes: "{{ legacy_license_keys }}"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
-    state: present
     https: true
     validate_certs: false
-    license_codes: "{{ legacy_license_keys }}"
   when: "('legacy' in ontap_license_key_format)"
   tags:
     - ontap_license_legacy
@@ -342,14 +342,14 @@
 # Add ONTAP Licenses using NetApp License File (NLF)
 - name: Add licenses using NLF
   netapp.ontap.na_ontap_license:
+    state: present
+    license_codes:
+      - "{{ lookup('file', '{{item}}' ) | string }}"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     https: true
     validate_certs: false
-    state: present
-    license_codes:
-      - "{{ lookup('file', '{{item}}' ) | string }}"
   with_items:
     - "{{ nlf_filepath }}"
   when: "('NLF' in ontap_license_key_format)"
@@ -407,11 +407,11 @@
 
 - name: Create SNMP traphost
   netapp.ontap.na_ontap_snmp_traphosts:
+    state: present
+    ip_address: "{{traphost_ip}}"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
-    state: present
-    ip_address: "{{traphost_ip}}"
     https: true
     validate_certs: false
   when: enable_snmp == true
@@ -421,12 +421,12 @@
 # Configure SNMPv1 Access
 - name: Configure SNMPv1 Access
   netapp.ontap.na_ontap_snmp:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     community_name: "{{snmp_community}}"
     access_control: 'ro'
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   when: enable_snmp == true
@@ -436,9 +436,6 @@
 # Configure SNMPv3 Access
 - name: Configure SNMPv3 Access
   netapp.ontap.na_ontap_user:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     vserver: "{{cluster_name}}"
     name: "{{user}}"
     state: present
@@ -449,6 +446,9 @@
     authentication_password: "{{authentication_password}}"
     privacy_protocol: "{{privacy_protocol}}"
     privacy_password: "{{privacy_password}}"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   when: enable_snmp == true
@@ -470,11 +470,11 @@
 # Enable FIPS Mode on the ONTAP Cluster
 - name: Enable FIPS on the ONTAP Cluster
   netapp.ontap.na_ontap_security_config:
+    name: ssl
+    is_fips_enabled: true
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
-    name: ssl
-    is_fips_enabled: true
     https: true
     validate_certs: false
   tags:
