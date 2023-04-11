@@ -1,4 +1,4 @@
-#ONTAP Cluster Management IP. List only one ONTAP cluster IP.
+# ONTAP Cluster Management IP. List only one ONTAP cluster IP.
 [ontap]
 10.102.0.30
 
