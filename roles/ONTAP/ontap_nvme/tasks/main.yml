@@ -2,15 +2,15 @@
 # Create NVMe namespace
 - name: Create NVMe namespace
   netapp.ontap.na_ontap_nvme_namespace:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     path: /vol/{{item.residing_vol}}/{{item.name}}
     size: "{{item.size}}"
     size_unit: gb
     ostype: "{{svm_specs.os_type}}"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   with_items:
@@ -61,14 +61,14 @@
 # Create NVMe subsystem and add the host NQNs to the NVMe subsystem
 - name: Create NVMe subsystem and add the host NQNs to the subsystem
   netapp.ontap.na_ontap_nvme_subsystem:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     subsystem: "{{svm_specs.nvme_subsystem}}"
     hosts: "{{nvme_nqns}}"
     ostype: "{{svm_specs.os_type}}"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   when: "('nvme' in svm_specs.allowed_protocols)"
@@ -90,13 +90,13 @@
 # Map the namespaces to the NVMe subsystem
 - name: Map the namespaces to the NVMe subsystem
   netapp.ontap.na_ontap_nvme_subsystem:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     subsystem: "{{svm_specs.nvme_subsystem}}"
     paths: "{{ns_paths_list}}"
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   when: "('nvme' in svm_specs.allowed_protocols)"
