@@ -97,8 +97,9 @@
 
 # Zero All Spare Disks
 - name: Zero all the spare disks
-  netapp.ontap.na_ontap_command:
-    command: ['disk', 'zerospares']
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'storage/disk/zerospares'
+    verb: 'POST'
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -132,19 +133,18 @@
 
 # Disable flow control only on ports that are used for data traffic
 - name: Disable flow control on data ports
-  netapp.ontap.na_ontap_net_port:
-    state: present
-    flowcontrol_admin: none
-    node: "{{item.1.node_name}}"
-    port: "{{item.0.node_data_ports}}"
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'network/port/objects/{{item.0.node_name}}/{{item.1}}'
+    verb: 'PATCH'
+    body: {'flowcontrol-admin': 'none'}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     https: true
     validate_certs: false
-  with_subelements:
-    - "{{ ha_pairs }}"
-    - node_specs
+  with_nested:
+    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
+    - "{{ ha_pairs | map(attribute='node_data_ports') | flatten }}"
   tags:
     - ontap_disable_flowcontrol
 
@@ -154,29 +154,35 @@
 
 # Enable CDP on the Storage Controller Nodes
 - name: Enable CDP on the Storage Controller Nodes
-  netapp.ontap.na_ontap_command:
-    command: "['node', 'run', '-node', '{{item.node_name}}', 'options', 'cdpd.enable', 'on']"
+  netapp.ontap.na_ontap_rest_cli:
+    command: options
+    verb: PATCH
+    params:
+      option_name: cdpd.enable
+    body:
+      option_value: "on"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     https: true
     validate_certs: false
-  with_items:
-    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
   tags:
     - ontap_enable_cdp
 
 # Enable LLDP on the Storage Controller Nodes
 - name: Enable LLDP on the Storage Controller Nodes
-  netapp.ontap.na_ontap_command:
-    command: "['node', 'run', '-node', '{{item.node_name}}', 'options', 'lldp.enable', 'on']"
+  netapp.ontap.na_ontap_rest_cli:
+    command: options
+    verb: PATCH
+    params:
+      option_name: lldp.enable
+    body:
+      option_value: "on"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     https: true
     validate_certs: false
-  with_items:
-    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
   tags:
     - ontap_enable_lldp
 
@@ -223,8 +229,10 @@
 
 # Enable Takeover for Storage Failover
 - name: Enable Takeover for Storage Failover
-  netapp.ontap.na_ontap_command:
-    command: "['storage', 'failover', 'modify', '-node', '{{item.node_name}}', '-enabled', 'true']"
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'storage/failover/objects/{{item.node_name}}'
+    verb: 'PATCH'
+    body: {'enabled': 'true'}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -237,8 +245,11 @@
 
 # Set Cluster's Timezone
 - name: Set Cluster's Timezone
-  netapp.ontap.na_ontap_command:
-    command: "['cluster', 'date', 'modify', '-timezone', '{{time_zone}}']"
+  netapp.ontap.na_ontap_cluster:
+    state: present
+    cluster_name: "{{cluster_name}}"
+    timezone :
+      name: "{{time_zone}}"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -246,20 +257,6 @@
     validate_certs: false
   tags:
     - ontap_set_timezone
-
-# Enable Hardware assist failover
-- name: Enable Hardware assist failover
-  netapp.ontap.na_ontap_command:
-    command: "['storage', 'failover', 'modify', '-node', '{{item.node_name}}', '-hwassist', 'true', '-hwassist-partner-ip', '{{item.partner_mgmt_ip}}']"
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
-    https: true
-    validate_certs: false
-  with_items:
-    - "{{ ha_pairs | map(attribute='node_specs') | flatten }}"
-  tags:
-    - ontap_enable_hwassist
 
 # Getting the FCP port list with port speed and node name
 - name: Get the FCP port list with port speed and node name
@@ -273,8 +270,10 @@
 
 # Disable Auto-Negotiate on Fibre Channel Ports
 - name: Disable each FC adapter in the controllers/nodes
-  netapp.ontap.na_ontap_command:
-    command: "['fcp', 'adapter', 'modify', '-node', '{{item.0.node_name}}', '-adapter', '{{item.1}}', '-status-admin', 'down']"
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'network/fcp/adapter/objects/{{item.0.node_name}}/{{item.1}}'
+    verb: 'PATCH'
+    body: {'status-admin': 'down'}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -287,9 +286,12 @@
   tags:
     - ontap_fc_adapters
 
+ # Set the desired speed on the adapter
 - name: Set the desired speed on the adapter and return it to the online state
-  netapp.ontap.na_ontap_command:
-    command: "['fcp', 'adapter', 'modify', '-node', '{{item.0.node_name}}', '-adapter', '{{item.1}}', '-speed', '{{item.0.fcp_port_speed}}', '-status-admin', 'up']"
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'network/fcp/adapter/objects/{{item.0.node_name}}/{{item.1}}'
+    verb: 'PATCH'
+    body: {'speed': '{{item.0.fcp_port_speed}}','status-admin': 'up'}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -313,7 +315,7 @@
     proxy_url: "{{autosupport_vars.proxy_url | default(omit)}}"
     transport: https
     post_url: "{{autosupport_vars.post_url | default(omit)}}"
-    support: yes
+    support: true
     state: present
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
@@ -329,7 +331,7 @@
 - name: Add licenses using legacy keys
   netapp.ontap.na_ontap_license:
     state: present
-    license_codes: "{{ legacy_license_keys }}"
+    license_codes: "{{legacy_license_keys}}"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -358,8 +360,10 @@
 
 # Configure SNMP
 - name: Configure SNMP contact
-  netapp.ontap.na_ontap_command:
-    command: ['snmp', 'contact', '{{snmp_contact}}']
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'system/snmp/contact'
+    verb: 'PATCH'
+    body: {'contact': '{{snmp_contact}}'}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -370,8 +374,10 @@
     - ontap_config_snmp
 
 - name: Configure SNMP location
-  netapp.ontap.na_ontap_command:
-    command: ['snmp', 'location', '{{snmp_location}}']
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'system/snmp/location'
+    verb: 'PATCH'
+    body: {'location': '{{snmp_location}}'}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -382,8 +388,10 @@
     - ontap_config_snmp
 
 - name: Configure SNMP init value
-  netapp.ontap.na_ontap_command:
-    command: ['snmp', 'init', '1']
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'system/snmp/init'
+    verb: 'PATCH'
+    body: {'init': '1'}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -394,8 +402,13 @@
     - ontap_config_snmp
 
 - name: Enable SNMP
-  netapp.ontap.na_ontap_command:
-    command: ['options', 'snmp.enable', 'on']
+  netapp.ontap.na_ontap_rest_cli:
+    command: options
+    verb: PATCH
+    params:
+      option_name: snmp.enable
+    body:
+      option_value: "on"
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
@@ -482,12 +495,15 @@
 
 # Remove insecure ciphers from the ONTAP Cluster. Ciphers with the suffix CBC are considered insecure
 - name: Remove insecure ciphers from the ONTAP Cluster
-  netapp.ontap.na_ontap_command:
-    command: "['security', 'ssh', 'remove', '-vserver', '{{cluster_name}}', '-ciphers', 'aes256-cbc,aes192-cbc,aes128-cbc,3des-cbc']"
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'security/ssh/remove'
+    verb: 'DELETE'
+    params: {'vserver': '{{cluster_name}}'}
+    body: {'ciphers': ['aes256-cbc','aes192-cbc','aes128-cbc','3des-cbc']}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     https: true
     validate_certs: false
   tags:
-    - ontap_remove_insecure_ciphers
+    - ontap_cluster_remove_insecure_ciphers
