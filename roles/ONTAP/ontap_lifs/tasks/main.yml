@@ -2,9 +2,6 @@
 # Create LIFs for NFS access
 - name: Create LIF(s) for NFS access
   netapp.ontap.na_ontap_interface:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     service_policy: default-data-files
@@ -16,6 +13,9 @@
     admin_status: up
     failover_policy: broadcast-domain-wide
     is_auto_revert: true
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   with_nested:
@@ -55,9 +55,6 @@
 # Create iSCSI LIFs on all nodes across the cluster
 - name: Create iSCSI LIFs on nodes
   netapp.ontap.na_ontap_interface:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     service_policy: default-data-iscsi
@@ -69,6 +66,9 @@
     admin_status: up
     failover_policy: disabled
     is_auto_revert: false
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   with_nested:
@@ -83,9 +83,6 @@
 # Create FCP LIF(s) on Nodes
 - name: Create FCP LIF(s) on Nodes
   netapp.ontap.na_ontap_interface:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     protocols: fcp
@@ -93,6 +90,9 @@
     home_port: "{{item.1.home_port}}"
     interface_name: "{{item.1.name}}"
     admin_status: up
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   with_subelements:
@@ -105,9 +105,6 @@
 # Create NVMe FC LIF(s) on Nodes
 - name: Create NVMe FC LIF(s) on Nodes
   netapp.ontap.na_ontap_interface:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     protocols: fc-nvme
@@ -115,6 +112,9 @@
     home_port: "{{item.1.home_port}}"
     interface_name: "{{item.1.name}}"
     admin_status: up
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   with_subelements:
@@ -155,9 +155,6 @@
 # Create NVMe/TCP LIFs on all nodes across the cluster
 - name: Create NVMe/TCP LIFs on nodes
   netapp.ontap.na_ontap_interface:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     service_policy: default-data-nvme-tcp
@@ -169,6 +166,9 @@
     admin_status: up
     failover_policy: disabled
     is_auto_revert: false
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   with_nested:
@@ -184,9 +184,6 @@
 # Create Storage Virtual Machine Management LIF
 - name: Create LIF for SVM Management
   netapp.ontap.na_ontap_interface:
-    hostname: "{{inventory_hostname}}"
-    username: "{{username}}"
-    password: "{{password}}"
     state: present
     vserver: "{{svm_specs.svm_name}}"
     service_policy: default-management
@@ -198,6 +195,9 @@
     admin_status: up
     failover_policy: broadcast-domain-wide
     is_auto_revert: true
+    hostname: "{{inventory_hostname}}"
+    username: "{{username}}"
+    password: "{{password}}"
     https: true
     validate_certs: false
   with_items:
