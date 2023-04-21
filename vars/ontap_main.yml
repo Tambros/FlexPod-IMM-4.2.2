@@ -61,6 +61,9 @@ privacy_password: <enter password>   #Password for the privacy protocol
 #Cluster Login banner Text message
 cluster_login_banner: Access restricted to authorized users
 
+#Text sent in the subject line of the AutoSupport message
+autosupport_message: "FlexPod ONTAP Storage configuration completed"
+
 ##################################################################################################################################################
 # Node/ Controller level information
 ##################################################################################################################################################
@@ -73,7 +76,7 @@ ha_pairs:
     fcp_port_speed: "32"
     node_specs:
     - node_name: aa02-a800-01
-      sp: {ip: 10.102.0.28, mask: 255.255.255.0, gateway: 10.102.0.254 }
+      sp: {ip: 10.102.0.28, mask: 255.255.255.0, gateway: 10.102.0.254}
       node_mgmt_ip: 10.102.0.31
       partner_mgmt_ip: 10.102.0.32
       data_aggregates:
