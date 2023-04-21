@@ -176,8 +176,10 @@
 
 # Update set of load-sharing mirrors
 - name: Update load-sharing mirrors
-  netapp.ontap.na_ontap_command:
-    command: ['snapmirror', 'update-ls-set', '-source-path', '{{item.svm_name}}', ':', '{{item.svm_root_vol}}']
+  netapp.ontap.na_ontap_rest_cli:
+    command: 'snapmirror/update-ls-set'
+    verb: 'POST'
+    body: {'source-path': '{{item.svm_name}}:{{item.svm_root_vol}}'}
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
