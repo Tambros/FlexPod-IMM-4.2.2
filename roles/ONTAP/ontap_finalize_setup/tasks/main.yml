@@ -18,19 +18,15 @@
 
 # Create and enable auditing configuration for the Storage Virtual Machine
 - name: Create and enable auditing configuration for the SVM
-  netapp.ontap.na_ontap_restit:
+  netapp.ontap.na_ontap_vserver_audit:
+    log_path: "/{{svm_specs.audit_log_volume_specs.name}}"
+    vserver: "{{svm_specs.svm_name}}"
+    enabled: true
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
-    api: protocols/audit
-    method: POST
-    vserver_name: "{{svm_specs.svm_name}}"
-    body:
-      enabled: true
-      log_path: "/{{svm_specs.audit_log_volume_specs.name}}"
     https: true
     validate_certs: false
-    wait_for_completion: true
   tags:
     - ontap_svm_audit_config
 
@@ -67,12 +63,12 @@
 # Invoke a Test AutoSupport
 - name: Send a test to AutoSupport
   netapp.ontap.na_ontap_autosupport_invoke:
+    autosupport_message: "{{autosupport_message}}"
+    type: all
     hostname: "{{inventory_hostname}}"
     username: "{{username}}"
     password: "{{password}}"
     https: true
     validate_certs: false
-    autosupport_message: FlexPod storage configuration completed
-    type: all
   tags:
     - ontap_invoke_autosupport
